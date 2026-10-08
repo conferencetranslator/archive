@@ -68,7 +68,6 @@
       gap: 12px;
     }
 
-    /* پاپ‌آپ خوش‌آمدگویی */
     .welcome-overlay {
       position: fixed;
       inset: 0;
@@ -169,7 +168,6 @@
       color: var(--text-muted);
     }
 
-    /* جستجو */
     .search-box {
       position: relative;
       width: 100%;
@@ -202,9 +200,10 @@
       fill: none;
     }
 
-    /* سوئیچ تب‌ها */
+    /* سوئیچ ۳ تایی تب‌ها */
     .tabs-wrapper {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.1fr;
       background: var(--toggle-bg);
       padding: 4px;
       border-radius: 12px;
@@ -213,15 +212,16 @@
     }
 
     .tab-btn {
-      flex: 1;
-      padding: 8px 10px;
+      padding: 8px 6px;
       border-radius: 9px;
       border: none;
       background: transparent;
       color: var(--text-muted);
-      font-size: 0.85rem;
+      font-size: 0.80rem;
       font-weight: 600;
       cursor: pointer;
+      text-align: center;
+      white-space: nowrap;
     }
 
     .tab-btn.active {
@@ -230,7 +230,6 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
 
-    /* لیست دکمه‌ها و دسته‌بندی‌ها */
     .category-list {
       display: flex;
       flex-direction: column;
@@ -271,7 +270,6 @@
       border: 1px solid var(--border);
     }
 
-    /* کارت‌های فایل و محتوا */
     .cards-container {
       display: flex;
       flex-direction: column;
@@ -425,11 +423,10 @@
 </head>
 <body>
 
-  <!-- پیام خوش‌آمدگویی -->
   <div id="welcome-modal" class="welcome-overlay">
     <div class="welcome-box">
       <div class="welcome-title">گنجینۀ سرای ترجمه</div>
-      <p class="welcome-text">دسترسی هوشمند، موضوعی و مستقیم به مباحث، دروس و کتب اساتید</p>
+      <p class="welcome-text">دسترسی هوشمند، موضوعی و مستقیم به مباحث، دروس و خطبه‌ها</p>
       <button class="welcome-btn" onclick="closeWelcome()">ورود به برنامه</button>
     </div>
   </div>
@@ -442,28 +439,31 @@
 
     <header>
       <h1>گنجینۀ محتوایی سرای ترجمه</h1>
-      <p class="subtitle" id="view-subtitle">آرشیو کامل دروس، پژوهش‌ها و بیانات مهدوی</p>
+      <p class="subtitle">آرشیو کامل دروس، پژوهش‌ها و بیانات مهدوی</p>
     </header>
 
-    <!-- کادر جست‌وجوی زنده -->
     <div class="search-box">
       <input type="text" id="search-input" class="search-input" placeholder="جست‌وجو در عنوان، استاد، موضوع، متن..." oninput="handleSearch()">
       <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
     </div>
 
-    <!-- سوئیچ انتخاب نما (اساتید / موضوعات) -->
+    <!-- تب‌های سه‌گانه -->
     <div class="tabs-wrapper" id="tabs-bar">
-      <button class="tab-btn active" id="tab-speakers" onclick="switchView('speakers')">بر اساس اساتید</button>
-      <button class="tab-btn" id="tab-topics" onclick="switchView('topics')">بر اساس موضوعات کلان</button>
+      <button class="tab-btn active" id="tab-speakers" onclick="switchView('speakers')">اساتید</button>
+      <button class="tab-btn" id="tab-topics" onclick="switchView('topics')">موضوعات کلان</button>
+      <button class="tab-btn" id="tab-khotbeh" onclick="switchView('khotbeh')">خطبه‌های جمعه</button>
     </div>
 
-    <!-- نمای دسته‌بندی اساتید -->
+    <!-- نمای اساتید -->
     <div id="speakers-view" class="category-list"></div>
 
-    <!-- نمای دسته‌بندی موضوعات کلان -->
+    <!-- نمای موضوعات کلان -->
     <div id="topics-view" class="category-list hidden"></div>
 
-    <!-- نمای کارت‌های محتوا (فیلتر شده یا جستجو شده) -->
+    <!-- نمای خطبه‌های جمعه -->
+    <div id="khotbeh-view" class="cards-container hidden"></div>
+
+    <!-- کارت‌های فیلترشده / نتایج جستجو -->
     <div id="cards-view" class="cards-container hidden">
       <div id="cards-list"></div>
       <button class="back-btn" onclick="returnToCategories()">
@@ -486,7 +486,6 @@
     }
     setTimeout(closeWelcome, 3500);
 
-    /* تم */
     const savedTheme = localStorage.getItem('user-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     applyTheme(savedTheme);
 
@@ -502,12 +501,9 @@
       applyTheme(current === 'dark' ? 'light' : 'dark');
     }
 
-    /* مدیریت داده‌ها */
     let allData = [];
-    let currentFilterType = null; 
-    let currentFilterValue = null;
+    let currentActiveView = 'speakers';
 
-    // ۶ دسته‌بندی کلان استاندارد
     const macroTopicKeys = [
       { key: "ادلۀ دعوت مبارک", match: ["ادلۀ دعوت", "ادله دعوت"] },
       { key: "پاسخ به شبهات", match: ["پاسخ به شبهات"] },
@@ -516,6 +512,12 @@
       { key: "فقه و احکام شرعی", match: ["فقه و احکام"] },
       { key: "آموزشی - مهارتی و کار گروهی", match: ["آموزشی", "مهارتی"] }
     ];
+
+    function isKhotbeh(item) {
+      const title = item.title || "";
+      const tags = (item.tags || []).join(" ");
+      return title.includes("خطبه") || tags.includes("خطبه_جمعه");
+    }
 
     async function loadData() {
       try {
@@ -538,11 +540,13 @@
     }
 
     function renderCategories() {
-      // رندر اساتید
+      // ۱. رندر اساتید (فقط دروس علمی، بدون احتساب خطبه‌ها)
       const speakerCounts = {};
       allData.forEach(item => {
-        const spk = item.speaker?.trim() || "نامشخص";
-        speakerCounts[spk] = (speakerCounts[spk] || 0) + 1;
+        if (!isKhotbeh(item)) {
+          const spk = item.speaker?.trim() || "نامشخص";
+          speakerCounts[spk] = (speakerCounts[spk] || 0) + 1;
+        }
       });
 
       const spkContainer = document.getElementById('speakers-view');
@@ -558,7 +562,7 @@
         spkContainer.appendChild(btn);
       });
 
-      // رندر موضوعات کلان
+      // ۲. رندر موضوعات کلان
       const topicCounts = {};
       macroTopicKeys.forEach(t => topicCounts[t.key] = 0);
 
@@ -585,30 +589,38 @@
           topContainer.appendChild(btn);
         }
       });
+
+      // ۳. رندر خطبه‌های جمعه
+      const khotbehItems = allData.filter(isKhotbeh);
+      const khotbehContainer = document.getElementById('khotbeh-view');
+      khotbehContainer.innerHTML = createCardsHtml(khotbehItems);
     }
 
     function switchView(view) {
+      currentActiveView = view;
       document.getElementById('tab-speakers').classList.toggle('active', view === 'speakers');
       document.getElementById('tab-topics').classList.toggle('active', view === 'topics');
+      document.getElementById('tab-khotbeh').classList.toggle('active', view === 'khotbeh');
+
       document.getElementById('speakers-view').classList.toggle('hidden', view !== 'speakers');
       document.getElementById('topics-view').classList.toggle('hidden', view !== 'topics');
+      document.getElementById('khotbeh-view').classList.toggle('hidden', view !== 'khotbeh');
+
       document.getElementById('cards-view').classList.add('hidden');
       document.getElementById('search-input').value = '';
     }
 
     function showFilteredCards(type, value) {
-      currentFilterType = type;
-      currentFilterValue = value;
-
       const filtered = allData.filter(item => {
-        if (type === 'speaker') return item.speaker?.trim() === value;
+        if (type === 'speaker') return item.speaker?.trim() === value && !isKhotbeh(item);
         if (type === 'topic') return normalizeTopic(item.macro_topic) === value;
         return true;
       });
 
-      renderCards(filtered);
+      document.getElementById('cards-list').innerHTML = createCardsHtml(filtered);
       document.getElementById('speakers-view').classList.add('hidden');
       document.getElementById('topics-view').classList.add('hidden');
+      document.getElementById('khotbeh-view').classList.add('hidden');
       document.getElementById('tabs-bar').classList.add('hidden');
       document.getElementById('cards-view').classList.remove('hidden');
 
@@ -621,9 +633,7 @@
     function returnToCategories() {
       document.getElementById('cards-view').classList.add('hidden');
       document.getElementById('tabs-bar').classList.remove('hidden');
-      const isTopicsActive = document.getElementById('tab-topics').classList.contains('active');
-      document.getElementById(isTopicsActive ? 'topics-view' : 'speakers-view').classList.remove('hidden');
-      
+      switchView(currentActiveView);
       if (tg?.BackButton) tg.BackButton.hide();
     }
 
@@ -643,21 +653,20 @@
         return t.includes(q) || s.includes(q) || m.includes(q) || st.includes(q) || tags.includes(q);
       });
 
-      renderCards(results);
+      document.getElementById('cards-list').innerHTML = createCardsHtml(results);
       document.getElementById('speakers-view').classList.add('hidden');
       document.getElementById('topics-view').classList.add('hidden');
+      document.getElementById('khotbeh-view').classList.add('hidden');
       document.getElementById('tabs-bar').classList.add('hidden');
       document.getElementById('cards-view').classList.remove('hidden');
     }
 
-    function renderCards(list) {
-      const listContainer = document.getElementById('cards-list');
-      if (list.length === 0) {
-        listContainer.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted); font-size:0.9rem;">موردی یافت نشد.</div>';
-        return;
+    function createCardsHtml(list) {
+      if (!list || list.length === 0) {
+        return '<div style="text-align:center; padding:30px; color:var(--text-muted); font-size:0.9rem;">موردی یافت نشد.</div>';
       }
 
-      listContainer.innerHTML = list.map(item => {
+      return list.map(item => {
         const hasTg = item.telegram_link && item.telegram_link.trim().length > 0;
         const tgBtn = hasTg 
           ? `<a href="${item.telegram_link}" target="_blank" class="action-btn tg">
@@ -695,7 +704,6 @@
       }).join('');
     }
 
-    // بارگذاری اولیه
     loadData();
   </script>
 </body>
