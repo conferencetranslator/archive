@@ -200,7 +200,7 @@
       fill: none;
     }
 
-    /* سوئیچ ۳ تایی تب‌ها */
+    /* تب‌های سه‌گانه */
     .tabs-wrapper {
       display: grid;
       grid-template-columns: 1fr 1fr 1.1fr;
@@ -249,13 +249,24 @@
       font-size: 0.90rem;
       font-weight: 500;
       cursor: pointer;
-      text-decoration: none;
       box-shadow: 0 2px 4px rgba(0,0,0,0.03);
     }
 
     .btn-item:active {
       transform: scale(0.985);
       background-color: var(--card-hover);
+    }
+
+    .btn-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-actions-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .btn-count {
@@ -268,6 +279,27 @@
       padding: 3px 8px;
       border-radius: 6px;
       border: 1px solid var(--border);
+    }
+
+    .btn-tg-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.74rem;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 4px 8px;
+      border-radius: 6px;
+      text-decoration: none;
+      border: 1px solid var(--border);
+    }
+
+    .btn-tg-link svg {
+      width: 11px;
+      height: 11px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
     }
 
     .cards-container {
@@ -454,16 +486,16 @@
       <button class="tab-btn" id="tab-khotbeh" onclick="switchView('khotbeh')">خطبه‌های جمعه</button>
     </div>
 
-    <!-- نمای اساتید -->
+    <!-- ۱. نمای اساتید -->
     <div id="speakers-view" class="category-list"></div>
 
-    <!-- نمای موضوعات کلان -->
+    <!-- ۲. نمای موضوعات کلان -->
     <div id="topics-view" class="category-list hidden"></div>
 
-    <!-- نمای خطبه‌های جمعه -->
+    <!-- ۳. نمای خطبه‌های جمعه -->
     <div id="khotbeh-view" class="cards-container hidden"></div>
 
-    <!-- کارت‌های فیلترشده / نتایج جستجو -->
+    <!-- ۴. کارت‌های فیلترشده / نتایج جستجو -->
     <div id="cards-view" class="cards-container hidden">
       <div id="cards-list"></div>
       <button class="back-btn" onclick="returnToCategories()">
@@ -504,6 +536,21 @@
     let allData = [];
     let currentActiveView = 'speakers';
 
+    // لیست ۱۰ گانه سفارشی اساتید
+    const customProfessors = [
+      { name: "سید احمدالحسن (علیه السلام)", link: "https://t.me/STarjomeh_Archive/259", match: ["سید احمد الحسن", "احمدالحسن"] },
+      { name: "مرحوم سید شیخ حسن الحمامی (ره)", link: "https://t.me/STarjomeh_Archive/179", match: ["حسن الحمامی", "الحمامی"] },
+      { name: "دکتر علاء السالم", link: "https://t.me/STarjomeh_Archive/2", match: ["علاء السالم", "السالم"] },
+      { name: "دکتر شیخ ناظم العقیلی", link: "https://t.me/STarjomeh_Archive/45", match: ["ناظم العقیلی", "العقیلی"] },
+      { name: "دکتر سید شیخ واثق الحسینی", link: "https://t.me/STarjomeh_Archive/53", match: ["واثق الحسینی", "الحسینی"] },
+      { name: "شیخ حبیب السعیدی", link: "https://t.me/STarjomeh_Archive/51", match: ["حبیب سعیدی", "حبیب السعیدی"] },
+      { name: "دکتر عبدالرزاق الدیراوی", link: "https://t.me/STarjomeh_Archive/49", match: ["عبدالرزاق دیراوی", "الدیراوی"] },
+      { name: "پروفسور دکتر توفیق المغربی", link: "https://t.me/STarjomeh_Archive/366", match: ["توفیق مغربی", "المغربی"] },
+      { name: "دکتر ابتسام احمد", link: "https://t.me/STarjomeh_Archive/184", match: ["ابتسام احمد"] },
+      { name: "سایر اساتید", link: "https://t.me/STarjomeh_Archive/185", match: [] }
+    ];
+
+    // ۶ دسته‌بندی موضوعی
     const macroTopicKeys = [
       { key: "ادلۀ دعوت مبارک", match: ["ادلۀ دعوت", "ادله دعوت"] },
       { key: "پاسخ به شبهات", match: ["پاسخ به شبهات"] },
@@ -539,25 +586,40 @@
       return topicStr;
     }
 
-    function renderCategories() {
-      // ۱. رندر اساتید (فقط دروس علمی، بدون احتساب خطبه‌ها)
-      const speakerCounts = {};
-      allData.forEach(item => {
-        if (!isKhotbeh(item)) {
-          const spk = item.speaker?.trim() || "نامشخص";
-          speakerCounts[spk] = (speakerCounts[spk] || 0) + 1;
+    function matchProfessor(spkName) {
+      if (!spkName) return "سایر اساتید";
+      for (const prof of customProfessors) {
+        if (prof.name === "سایر اساتید") continue;
+        if (prof.match.some(m => spkName.includes(m))) {
+          return prof.name;
         }
-      });
+      }
+      return "سایر اساتید";
+    }
 
+    function renderCategories() {
+      // ۱. رندر فهرست اساتید سفارشی
+      const nonKhotbehItems = allData.filter(item => !isKhotbeh(item));
       const spkContainer = document.getElementById('speakers-view');
       spkContainer.innerHTML = '';
-      Object.keys(speakerCounts).sort().forEach(spk => {
+
+      customProfessors.forEach(prof => {
+        const count = nonKhotbehItems.filter(item => matchProfessor(item.speaker) === prof.name).length;
+        
         const btn = document.createElement('div');
         btn.className = 'btn-item';
-        btn.onclick = () => showFilteredCards('speaker', spk);
+        btn.onclick = () => showFilteredCards('professor', prof.name);
         btn.innerHTML = `
-          <span>🎙 ${spk}</span>
-          <span class="btn-count">${speakerCounts[spk]} درس</span>
+          <div class="btn-info">
+            <span>🎙 ${prof.name}</span>
+          </div>
+          <div class="btn-actions-box">
+            <span class="btn-count">${count} درس</span>
+            <a href="${prof.link}" target="_blank" class="btn-tg-link" onclick="event.stopPropagation()">
+              <span>کانال</span>
+              <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+            </a>
+          </div>
         `;
         spkContainer.appendChild(btn);
       });
@@ -583,7 +645,9 @@
           btn.className = 'btn-item';
           btn.onclick = () => showFilteredCards('topic', top);
           btn.innerHTML = `
-            <span>📂 ${top}</span>
+            <div class="btn-info">
+              <span>📂 ${top}</span>
+            </div>
             <span class="btn-count">${topicCounts[top]} جلسه</span>
           `;
           topContainer.appendChild(btn);
@@ -612,7 +676,7 @@
 
     function showFilteredCards(type, value) {
       const filtered = allData.filter(item => {
-        if (type === 'speaker') return item.speaker?.trim() === value && !isKhotbeh(item);
+        if (type === 'professor') return matchProfessor(item.speaker) === value && !isKhotbeh(item);
         if (type === 'topic') return normalizeTopic(item.macro_topic) === value;
         return true;
       });
@@ -679,7 +743,7 @@
 
         const ytBtn = item.youtube_link && item.youtube_link.trim().length > 0
           ? `<a href="${item.youtube_link}" target="_blank" class="action-btn yt">
-               <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+               <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                ویدیوی اصلی (عربی)
              </a>`
           : '';
