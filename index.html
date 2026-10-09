@@ -23,6 +23,7 @@
       --toggle-bg: #f1f5f9;
       --youtube: #ef4444;
       --telegram: #0284c7;
+      --icon-theme-color: #0284c7;
     }
 
     [data-theme="dark"] {
@@ -39,6 +40,7 @@
       --toggle-bg: #182234;
       --youtube: #f87171;
       --telegram: #38bdf8;
+      --icon-theme-color: #facc15;
     }
 
     * {
@@ -137,26 +139,33 @@
       border: 1px solid var(--border);
     }
 
+    /* دکمه تم رنگی و جذاب */
     .theme-toggle {
       background: var(--toggle-bg);
       border: 1px solid var(--border);
       border-radius: 50%;
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      color: var(--text-color);
+      color: var(--icon-theme-color);
       outline: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.06);
     }
 
     .theme-toggle svg {
-      width: 18px;
-      height: 18px;
-      stroke: currentColor;
+      width: 20px;
+      height: 20px;
+      stroke: var(--icon-theme-color);
       fill: none;
-      stroke-width: 2;
+      stroke-width: 2.2;
+      transition: transform 0.25s ease, stroke 0.2s ease;
+    }
+
+    .theme-toggle:active svg {
+      transform: scale(0.85);
     }
 
     header {
@@ -208,13 +217,13 @@
       fill: none;
     }
 
-    /* ساختار داشبورد: ۱ بالا تمام‌عرض و ۲ پایین کنار هم همراه با فاصله مطلوب از سرچ */
+    /* داشبورد */
     .dashboard-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
       width: 100%;
-      margin-top: 24px; /* فاصله مناسب و چند سانتی از باکس جست‌وجو */
+      margin-top: 24px;
       margin-bottom: 6px;
     }
 
@@ -509,7 +518,7 @@
     <div class="top-bar">
       <span class="brand-tag">سرای ترجمه</span>
       <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()" aria-label="تغییر تم">
-        <svg id="theme-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        <svg id="theme-icon" viewBox="0 0 24 24"></svg>
       </button>
     </div>
 
@@ -523,19 +532,16 @@
       <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
     </div>
 
-    <!-- داشبورد اصلی (خطبه‌ها بالا به‌صورت کشیده، اساتید و موضوعی در پایین کنار هم) -->
+    <!-- داشبورد اصلی -->
     <div id="dashboard-section" class="dashboard-grid">
-      <!-- ۱. خطبه‌های نماز جمعه (بالا و تمام‌عرض) -->
       <div class="dash-box full-width" onclick="openSection('khotbeh')">
         <span class="dash-title">خطبه‌های نماز جمعه</span>
       </div>
 
-      <!-- ۲. پژوهش‌های اساتید (راست پایین) -->
       <div class="dash-box" onclick="openSection('professors')">
         <span class="dash-title">پژوهش‌های اساتید</span>
       </div>
 
-      <!-- ۳. دسته‌بندی موضوعی (چپ پایین) -->
       <div class="dash-box" onclick="openSection('topics')">
         <span class="dash-title">دسته‌بندی موضوعی</span>
       </div>
@@ -615,9 +621,19 @@
       const icon = document.getElementById('theme-icon');
       if (icon) {
         if (theme === 'dark') {
-          icon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+          // خورشید زرد طلایی با پرتوهای درخشان
+          icon.innerHTML = '<circle cx="12" cy="12" r="4.5" fill="#facc15" stroke="#facc15"></circle>' +
+            '<line x1="12" y1="1.5" x2="12" y2="3.5" stroke="#facc15" stroke-linecap="round"></line>' +
+            '<line x1="12" y1="20.5" x2="12" y2="22.5" stroke="#facc15" stroke-linecap="round"></line>' +
+            '<line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="#facc15" stroke-linecap="round"></line>' +
+            '<line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="#facc15" stroke-linecap="round"></line>' +
+            '<line x1="1.5" y1="12" x2="3.5" y2="12" stroke="#facc15" stroke-linecap="round"></line>' +
+            '<line x1="20.5" y1="12" x2="22.5" y2="12" stroke="#facc15" stroke-linecap="round"></line>' +
+            '<line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="#facc15" stroke-linecap="round"></line>' +
+            '<line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="#facc15" stroke-linecap="round"></line>';
         } else {
-          icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+          // هلال ماه آبی جذاب
+          icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="#0284c7" stroke="#0284c7"></path>';
         }
       }
       localStorage.setItem('user-theme', theme);
@@ -632,7 +648,6 @@
     let currentKhotbehSort = 'desc'; 
     let previousLayer = 'dashboard';
 
-    // فهرست اساتید سفارشی
     const customProfessors = [
       { name: "سید احمدالحسن (علیه السلام)", match: ["سید احمد الحسن", "احمدالحسن"] },
       { name: "مرحوم سید شیخ حسن الحمامی (ره)", match: ["حسن الحمامی", "الحمامی"] },
@@ -646,7 +661,6 @@
       { name: "سایر اساتید", match: [] }
     ];
 
-    // موضوعات کلان
     const macroTopicKeys = [
       { key: "ادلۀ دعوت مهدوی", hasSub: true, match: ["ادلۀ دعوت", "ادله دعوت"] },
       { key: "پاسخ به شبهات", hasSub: false, match: ["پاسخ به شبهات"] },
@@ -657,7 +671,6 @@
       { key: "ادعیه و زیارات", hasSub: false, match: ["ادعیه و زیارات"] }
     ];
 
-    // زیرشاخه‌های ادله دعوت
     const adellehSubTopics = [
       {
         title: "نصوص قطعی، وصیت مقدس پیامبر (ص) و سنت الهی خلفا و علم",
@@ -686,7 +699,6 @@
       }
     ];
 
-    // زیرشاخه‌های اخلاق و معارف
     const akhlaqSubTopics = [
       {
         title: "دروس اخلاق و معارف",
@@ -977,7 +989,7 @@
 
         const ytBtn = item.youtube_link && item.youtube_link.trim().length > 0
           ? `<a href="${item.youtube_link}" target="_blank" class="action-btn yt">
-               <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+               <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                ویدیوی اصلی (عربی)
              </a>`
           : '';
