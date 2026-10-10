@@ -257,6 +257,79 @@
       line-height: 1.4;
     }
 
+    /* باکس ثبت پیشنهاد ترجمه */
+    .request-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    }
+
+    .request-header {
+      font-size: 0.90rem;
+      font-weight: 700;
+      color: var(--text-color);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .request-desc {
+      font-size: 0.80rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .request-form {
+      display: flex;
+      gap: 8px;
+    }
+
+    .request-input {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--toggle-bg);
+      color: var(--text-color);
+      font-size: 0.85rem;
+      direction: ltr;
+      outline: none;
+    }
+
+    .request-input:focus {
+      border-color: var(--accent);
+    }
+
+    .request-btn {
+      padding: 10px 18px;
+      border-radius: 10px;
+      border: none;
+      background: var(--accent);
+      color: #ffffff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .request-btn:active {
+      transform: scale(0.96);
+    }
+
+    .request-status {
+      display: none;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.80rem;
+      line-height: 1.65;
+    }
+
     .sort-bar {
       display: flex;
       justify-content: space-between;
@@ -530,17 +603,34 @@
     </div>
 
     <!-- داشبورد اصلی -->
-    <div id="dashboard-section" class="dashboard-grid">
-      <div class="dash-box full-width" onclick="openSection('khotbeh')">
-        <span class="dash-title">خطبه‌های نماز جمعه</span>
+    <div id="dashboard-section">
+      <div class="dashboard-grid">
+        <div class="dash-box full-width" onclick="openSection('khotbeh')">
+          <span class="dash-title">خطبه‌های نماز جمعه</span>
+        </div>
+
+        <div class="dash-box" onclick="openSection('professors')">
+          <span class="dash-title">پژوهش‌های اساتید</span>
+        </div>
+
+        <div class="dash-box" onclick="openSection('topics')">
+          <span class="dash-title">دسته‌بندی موضوعی</span>
+        </div>
       </div>
 
-      <div class="dash-box" onclick="openSection('professors')">
-        <span class="dash-title">پژوهش‌های اساتید</span>
-      </div>
-
-      <div class="dash-box" onclick="openSection('topics')">
-        <span class="dash-title">دسته‌بندی موضوعی</span>
+      <!-- باکس پیشنهاد و درخواست ترجمه -->
+      <div class="request-container">
+        <div class="request-header">
+          <span>💡 پیشنهاد و درخواست ترجمه</span>
+        </div>
+        <p class="request-desc">
+          اگر ویدیو یا سخنرانی خاصی مد نظرتان است، پیوند اینترنتی آن را وارد کنید تا پس از بررسی ترجمه شود:
+        </p>
+        <div class="request-form">
+          <input type="url" id="orderLink" class="request-input" placeholder="https://..." />
+          <button type="button" class="request-btn" onclick="submitOrder()">ارسال</button>
+        </div>
+        <div id="orderStatus" class="request-status"></div>
       </div>
     </div>
 
@@ -651,6 +741,61 @@
     let allData = [];
     let currentKhotbehSort = 'desc'; 
     let previousLayer = 'dashboard';
+
+    // تابع ثبت و ارسال سفارش به تاپیک اختصاصی گروه
+    async function submitOrder() {
+      const linkInput = document.getElementById('orderLink');
+      const statusBox = document.getElementById('orderStatus');
+      const link = linkInput.value.trim();
+
+      if (!link || (!link.startsWith('http://') && !link.startsWith('https://'))) {
+        statusBox.style.display = 'block';
+        statusBox.style.background = 'rgba(239, 68, 68, 0.15)';
+        statusBox.style.color = '#ef4444';
+        statusBox.innerText = '⚠️ لطفاً یک پیوند معتبر اینترنتی وارد کنید.';
+        return;
+      }
+
+      statusBox.style.display = 'block';
+      statusBox.style.background = 'var(--accent-soft)';
+      statusBox.style.color = 'var(--text-color)';
+      statusBox.innerText = '⏳ در حال ثبت پیشنهاد شما...';
+
+      const BOT_TOKEN = "8860843097:AAE7LFmQ06Sbe-RhguieRN47124fE3HQt7s";
+      const GROUP_CHAT_ID = "-1004367165611";
+      const TOPIC_ID = 2;
+
+      const messageText = `📥 **پیشنهاد ترجمه جدید:**\n\n🔗 ${link}`;
+
+      try {
+        const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: GROUP_CHAT_ID,
+            message_thread_id: TOPIC_ID,
+            text: messageText,
+            disable_web_page_preview: false
+          })
+        });
+
+        if (res.ok) {
+          statusBox.style.background = 'rgba(34, 197, 94, 0.15)';
+          statusBox.style.color = '#22c55e';
+          statusBox.innerHTML = `
+            🌱 <b>از همراهی و پیشنهاد ارزشمند شما صمیمانه سپاسگزاریم!</b><br>
+            درخواست شما دریافت شد و در اسرع وقت فایل پیشنهادی ترجمه شده و در کانال منتشر خواهد شد.
+          `;
+          linkInput.value = '';
+        } else {
+          throw new Error();
+        }
+      } catch (error) {
+        statusBox.style.background = 'rgba(239, 68, 68, 0.15)';
+        statusBox.style.color = '#ef4444';
+        statusBox.innerText = '❌ خطایی در ارسال رخ داد؛ لطفاً مجدداً تلاش فرمایید.';
+      }
+    }
 
     // فهرست ۹ استاد شاخص اصلی
     const customProfessors = [
@@ -775,7 +920,6 @@
         const btn = document.createElement('div');
         btn.className = 'btn-item';
         
-        // اگر سایر اساتید بود به زیرمنوی اساتید هدایت شود
         if (prof.name === "سایر اساتید") {
           btn.onclick = () => openOtherProfessors();
         } else {
@@ -793,7 +937,6 @@
       });
     }
 
-    // باز کردن زیرمجموعه سایر اساتید
     function openOtherProfessors() {
       previousLayer = 'professors';
       document.getElementById('professors-view').classList.add('hidden');
@@ -801,7 +944,6 @@
 
       const lessonItems = allData.filter(item => !isKhotbeh(item) && matchProfessor(item.speaker) === "سایر اساتید");
       
-      // استخراج لیست اساتید فرعی یکتا همراه با تعداد
       const subCounts = {};
       lessonItems.forEach(item => {
         const spk = item.speaker?.trim() || "نامشخص";
