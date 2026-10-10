@@ -763,23 +763,16 @@
 
       const BOT_TOKEN = "8860843097:AAE7LFmQ06Sbe-RhguieRN47124fE3HQt7s";
       const GROUP_CHAT_ID = "-1004367165611";
-      const TOPIC_ID = 2;
+      const TOPIC_ID = "2";
 
-      const messageText = `📥 **پیشنهاد ترجمه جدید:**\n\n🔗 ${link}`;
+      const text = encodeURIComponent(`📥 **پیشنهاد ترجمه جدید:**\n\n🔗 ${link}`);
+      const apiUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${GROUP_CHAT_ID}&message_thread_id=${TOPIC_ID}&text=${text}`;
 
       try {
-        const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: GROUP_CHAT_ID,
-            message_thread_id: TOPIC_ID,
-            text: messageText,
-            disable_web_page_preview: false
-          })
-        });
+        const res = await fetch(apiUrl);
+        const data = await res.json();
 
-        if (res.ok) {
+        if (data.ok) {
           statusBox.style.background = 'rgba(34, 197, 94, 0.15)';
           statusBox.style.color = '#22c55e';
           statusBox.innerHTML = `
@@ -788,12 +781,16 @@
           `;
           linkInput.value = '';
         } else {
-          throw new Error();
+          console.error("Telegram error:", data);
+          statusBox.style.background = 'rgba(239, 68, 68, 0.15)';
+          statusBox.style.color = '#ef4444';
+          statusBox.innerText = `❌ خطا: ${data.description || 'امکان ثبت وجود ندارد'}`;
         }
       } catch (error) {
+        console.error("Fetch error:", error);
         statusBox.style.background = 'rgba(239, 68, 68, 0.15)';
         statusBox.style.color = '#ef4444';
-        statusBox.innerText = '❌ خطایی در ارسال رخ داد؛ لطفاً مجدداً تلاش فرمایید.';
+        statusBox.innerText = '❌ خطای ارتباط شبکه؛ لطفاً مجدداً امتحان فرمایید.';
       }
     }
 
