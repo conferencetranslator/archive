@@ -59,7 +59,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 16px 14px 28px 14px;
+      padding: 16px 14px 80px 14px;
     }
 
     .container {
@@ -169,7 +169,7 @@
 
     header {
       text-align: center;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
     h1 {
@@ -184,10 +184,70 @@
       color: var(--text-muted);
     }
 
+    /* نوار مسیرنما (Breadcrumb) */
+    .breadcrumb-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 0.80rem;
+      margin-top: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+
+    .breadcrumb-trail {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      white-space: nowrap;
+      color: var(--text-muted);
+    }
+
+    .breadcrumb-item {
+      cursor: pointer;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .breadcrumb-item:hover {
+      text-decoration: underline;
+    }
+
+    .breadcrumb-item.active {
+      color: var(--text-color);
+      cursor: default;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .breadcrumb-separator {
+      color: var(--border);
+      font-size: 0.75rem;
+    }
+
+    .breadcrumb-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      background: var(--toggle-bg);
+      border: 1px solid var(--border);
+      color: var(--text-color);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
     .search-box {
       position: relative;
       width: 100%;
-      margin: 4px 0 0 0;
+      margin: 2px 0 0 0;
     }
 
     .search-input {
@@ -221,7 +281,7 @@
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
       width: 100%;
-      margin-top: 24px;
+      margin-top: 18px;
       margin-bottom: 6px;
     }
 
@@ -486,6 +546,56 @@
       stroke-width: 2.2;
     }
 
+    /* نوار ناوبری شناور در پایین صفحه */
+    .floating-nav {
+      position: fixed;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 14px;
+      z-index: 1000;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    .floating-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--toggle-bg);
+      border: 1px solid var(--border);
+      color: var(--text-color);
+      font-size: 0.80rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 16px;
+      cursor: pointer;
+    }
+
+    .floating-btn.primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .floating-btn:active {
+      transform: scale(0.95);
+    }
+
+    .floating-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+    }
+
     .hidden {
       display: none !important;
     }
@@ -524,8 +634,17 @@
       <p class="subtitle">آرشیو کامل دروس، پژوهش‌ها و بیانات مهدوی</p>
     </header>
 
+    <!-- نوار مسیرنما (Breadcrumb) بالای صفحه -->
+    <div id="breadcrumb-bar" class="breadcrumb-bar hidden">
+      <div class="breadcrumb-trail" id="breadcrumb-trail"></div>
+      <button class="breadcrumb-back-btn" onclick="navigateBack()">
+        <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2;"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        <span>عقب</span>
+      </button>
+    </div>
+
     <div class="search-box">
-      <input type="text" id="search-input" class="search-input" placeholder="جست‌وجو در عنوان، استاد، موضوع، متن..." oninput="handleSearch()">
+      <input type="text" id="search-input" class="search-input" placeholder="جست‌وجوی سراسری در تمام فایل‌ها..." oninput="handleSearch()">
       <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
     </div>
 
@@ -606,6 +725,18 @@
     </div>
   </div>
 
+  <!-- نوار ناوبری شناور در پایین صفحه -->
+  <div id="floating-nav" class="floating-nav hidden">
+    <button class="floating-btn primary" onclick="returnToDashboard()">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>صفحه اصلی</span>
+    </button>
+    <button class="floating-btn" onclick="navigateBack()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      <span>یک مرحله عقب</span>
+    </button>
+  </div>
+
   <script>
     const tg = window.Telegram?.WebApp;
     if (tg) {
@@ -650,7 +781,67 @@
 
     let allData = [];
     let currentKhotbehSort = 'desc'; 
+    let currentView = 'dashboard';
     let previousLayer = 'dashboard';
+    let navigationTrail = [{ label: 'خانه', action: () => returnToDashboard() }];
+    let currentActiveContextData = [];
+
+    // به‌روزرسانی نوار مسیرنما و دکمه‌های شناور
+    function updateBreadcrumb() {
+      const bar = document.getElementById('breadcrumb-bar');
+      const trailContainer = document.getElementById('breadcrumb-trail');
+      const floatNav = document.getElementById('floating-nav');
+
+      if (currentView === 'dashboard') {
+        bar.classList.add('hidden');
+        floatNav.classList.add('hidden');
+        return;
+      }
+
+      bar.classList.remove('hidden');
+      floatNav.classList.remove('hidden');
+      trailContainer.innerHTML = '';
+
+      navigationTrail.forEach((item, index) => {
+        const isLast = index === navigationTrail.length - 1;
+        const span = document.createElement('span');
+        span.className = `breadcrumb-item ${isLast ? 'active' : ''}`;
+        span.innerText = item.label;
+        if (!isLast && item.action) {
+          span.onclick = item.action;
+        }
+        trailContainer.appendChild(span);
+
+        if (!isLast) {
+          const sep = document.createElement('span');
+          sep.className = 'breadcrumb-separator';
+          sep.innerText = '/';
+          trailContainer.appendChild(sep);
+        }
+      });
+    }
+
+    // تنظیم عنوان و عملکرد هوشمند باکس سرچ بر اساس موقعیت
+    function setSearchContext(placeholderText, contextData = null) {
+      const input = document.getElementById('search-input');
+      input.value = '';
+      input.placeholder = placeholderText;
+      currentActiveContextData = contextData;
+    }
+
+    // بازگشت عمومی به مرحله قبل
+    function navigateBack() {
+      if (navigationTrail.length > 1) {
+        const target = navigationTrail[navigationTrail.length - 2];
+        if (target && target.action) {
+          target.action();
+        } else {
+          returnToDashboard();
+        }
+      } else {
+        returnToDashboard();
+      }
+    }
 
     // فهرست ۹ استاد شاخص اصلی
     const customProfessors = [
@@ -775,7 +966,6 @@
         const btn = document.createElement('div');
         btn.className = 'btn-item';
         
-        // اگر سایر اساتید بود به زیرمنوی اساتید هدایت شود
         if (prof.name === "سایر اساتید") {
           btn.onclick = () => openOtherProfessors();
         } else {
@@ -793,15 +983,23 @@
       });
     }
 
-    // باز کردن زیرمجموعه سایر اساتید
     function openOtherProfessors() {
       previousLayer = 'professors';
+      currentView = 'other-professors';
+      
+      navigationTrail = [
+        { label: 'خانه', action: () => returnToDashboard() },
+        { label: 'پژوهش‌های اساتید', action: () => openSection('professors') },
+        { label: 'سایر اساتید', action: () => openOtherProfessors() }
+      ];
+      updateBreadcrumb();
+
+      const lessonItems = allData.filter(item => !isKhotbeh(item) && matchProfessor(item.speaker) === "سایر اساتید");
+      setSearchContext('جست‌وجو در فهرست سایر اساتید...', lessonItems);
+
       document.getElementById('professors-view').classList.add('hidden');
       document.getElementById('other-professors-view').classList.remove('hidden');
 
-      const lessonItems = allData.filter(item => !isKhotbeh(item) && matchProfessor(item.speaker) === "سایر اساتید");
-      
-      // استخراج لیست اساتید فرعی یکتا همراه با تعداد
       const subCounts = {};
       lessonItems.forEach(item => {
         const spk = item.speaker?.trim() || "نامشخص";
@@ -821,7 +1019,7 @@
           btn.onclick = () => {
             previousLayer = 'other-professors';
             const filtered = lessonItems.filter(item => (item.speaker?.trim() || "نامشخص") === spkName);
-            displayCards(filtered, 'بازگشت به فهرست سایر اساتید');
+            displayCards(filtered, 'بازگشت به فهرست سایر اساتید', spkName);
           };
           btn.innerHTML = `
             <span>${spkName}</span>
@@ -870,6 +1068,18 @@
 
     function openSubTopics(parentKey) {
       previousLayer = 'topics';
+      currentView = 'subtopics';
+      
+      navigationTrail = [
+        { label: 'خانه', action: () => returnToDashboard() },
+        { label: 'دسته‌بندی موضوعی', action: () => openSection('topics') },
+        { label: parentKey, action: () => openSubTopics(parentKey) }
+      ];
+      updateBreadcrumb();
+
+      let parentItems = allData.filter(item => normalizeTopic(item.macro_topic) === parentKey);
+      setSearchContext(`جست‌وجو در مباحث ${parentKey}...`, parentItems);
+
       document.getElementById('topics-view').classList.add('hidden');
       document.getElementById('subtopics-view').classList.remove('hidden');
 
@@ -877,8 +1087,6 @@
       container.innerHTML = '';
 
       let subList = [];
-      let parentItems = allData.filter(item => normalizeTopic(item.macro_topic) === parentKey);
-
       if (parentKey === "ادلۀ دعوت مهدوی") {
         subList = adellehSubTopics;
       } else if (parentKey === "اخلاق و معارف") {
@@ -892,7 +1100,7 @@
         btn.onclick = () => {
           const filtered = parentItems.filter(sub.filter);
           previousLayer = 'subtopics';
-          displayCards(filtered, 'بازگشت به ' + parentKey);
+          displayCards(filtered, 'بازگشت به ' + parentKey, sub.title);
         };
         btn.innerHTML = `
           <span>${sub.title}</span>
@@ -936,16 +1144,37 @@
       document.getElementById('khotbeh-view').classList.add('hidden');
       document.getElementById('cards-view').classList.add('hidden');
 
+      currentView = sec;
+
       if (sec === 'professors') {
         document.getElementById('professors-view').classList.remove('hidden');
         previousLayer = 'dashboard';
+        navigationTrail = [
+          { label: 'خانه', action: () => returnToDashboard() },
+          { label: 'پژوهش‌های اساتید', action: () => openSection('professors') }
+        ];
+        const profItems = allData.filter(item => !isKhotbeh(item));
+        setSearchContext('جست‌وجو در پژوهش‌های اساتید...', profItems);
       } else if (sec === 'topics') {
         document.getElementById('topics-view').classList.remove('hidden');
         previousLayer = 'dashboard';
+        navigationTrail = [
+          { label: 'خانه', action: () => returnToDashboard() },
+          { label: 'دسته‌بندی موضوعی', action: () => openSection('topics') }
+        ];
+        setSearchContext('جست‌وجو در دسته‌بندی موضوعی...', allData);
       } else if (sec === 'khotbeh') {
         document.getElementById('khotbeh-view').classList.remove('hidden');
         previousLayer = 'dashboard';
+        navigationTrail = [
+          { label: 'خانه', action: () => returnToDashboard() },
+          { label: 'خطبه‌های نماز جمعه', action: () => openSection('khotbeh') }
+        ];
+        const khotbehItems = allData.filter(isKhotbeh);
+        setSearchContext('جست‌وجو در خطبه‌های نماز جمعه...', khotbehItems);
       }
+
+      updateBreadcrumb();
 
       if (tg?.BackButton) {
         tg.BackButton.show();
@@ -954,6 +1183,10 @@
     }
 
     function returnToDashboard() {
+      currentView = 'dashboard';
+      previousLayer = 'dashboard';
+      navigationTrail = [{ label: 'خانه', action: () => returnToDashboard() }];
+
       document.getElementById('dashboard-section').classList.remove('hidden');
       document.getElementById('professors-view').classList.add('hidden');
       document.getElementById('other-professors-view').classList.add('hidden');
@@ -961,7 +1194,9 @@
       document.getElementById('subtopics-view').classList.add('hidden');
       document.getElementById('khotbeh-view').classList.add('hidden');
       document.getElementById('cards-view').classList.add('hidden');
-      document.getElementById('search-input').value = '';
+
+      setSearchContext('جست‌وجوی سراسری در تمام فایل‌ها...', null);
+      updateBreadcrumb();
 
       if (tg?.BackButton) tg.BackButton.hide();
     }
@@ -969,22 +1204,49 @@
     function showProfessorCards(profName) {
       previousLayer = 'professors';
       const filtered = allData.filter(item => matchProfessor(item.speaker) === profName && !isKhotbeh(item));
-      displayCards(filtered, 'بازگشت به پژوهش‌های اساتید');
+      displayCards(filtered, 'بازگشت به پژوهش‌های اساتید', profName);
     }
 
     function showTopicCards(topicName) {
       previousLayer = 'topics';
       const filtered = allData.filter(item => normalizeTopic(item.macro_topic) === topicName);
-      displayCards(filtered, 'بازگشت به دسته‌بندی موضوعی');
+      displayCards(filtered, 'بازگشت به دسته‌بندی موضوعی', topicName);
     }
 
-    function displayCards(items, backText) {
+    function displayCards(items, backText, pageTitle = '') {
+      currentView = 'cards';
       document.getElementById('professors-view').classList.add('hidden');
       document.getElementById('other-professors-view').classList.add('hidden');
       document.getElementById('topics-view').classList.add('hidden');
       document.getElementById('subtopics-view').classList.add('hidden');
       document.getElementById('khotbeh-view').classList.add('hidden');
       document.getElementById('dashboard-section').classList.add('hidden');
+
+      if (previousLayer === 'professors') {
+        navigationTrail = [
+          { label: 'خانه', action: () => returnToDashboard() },
+          { label: 'پژوهش‌های اساتید', action: () => openSection('professors') },
+          { label: pageTitle || 'جلسات استاد', action: null }
+        ];
+      } else if (previousLayer === 'other-professors') {
+        navigationTrail = [
+          { label: 'خانه', action: () => returnToDashboard() },
+          { label: 'پژوهش‌های اساتید', action: () => openSection('professors') },
+          { label: 'سایر اساتید', action: () => openOtherProfessors() },
+          { label: pageTitle || 'جلسات استاد', action: null }
+        ];
+      } else if (previousLayer === 'topics') {
+        navigationTrail = [
+          { label: 'خانه', action: () => returnToDashboard() },
+          { label: 'دسته‌بندی موضوعی', action: () => openSection('topics') },
+          { label: pageTitle || 'جلسات', action: null }
+        ];
+      } else if (previousLayer === 'subtopics') {
+        navigationTrail.push({ label: pageTitle || 'جلسات', action: null });
+      }
+
+      updateBreadcrumb();
+      setSearchContext(`جست‌وجو در مباحث «${pageTitle || 'این بخش'}»...`, items);
 
       document.getElementById('cards-list').innerHTML = createCardsHtml(items);
       document.getElementById('cards-back-text').innerText = backText;
@@ -1002,6 +1264,11 @@
       } else if (previousLayer === 'other-professors') {
         document.getElementById('cards-view').classList.add('hidden');
         document.getElementById('other-professors-view').classList.remove('hidden');
+        currentView = 'other-professors';
+        navigationTrail.pop();
+        updateBreadcrumb();
+        const lessonItems = allData.filter(item => !isKhotbeh(item) && matchProfessor(item.speaker) === "سایر اساتید");
+        setSearchContext('جست‌وجو در فهرست سایر اساتید...', lessonItems);
         if (tg?.BackButton) {
           tg.BackButton.show();
           tg.BackButton.onClick(() => openSection('professors'));
@@ -1011,6 +1278,9 @@
       } else if (previousLayer === 'subtopics') {
         document.getElementById('cards-view').classList.add('hidden');
         document.getElementById('subtopics-view').classList.remove('hidden');
+        currentView = 'subtopics';
+        navigationTrail.pop();
+        updateBreadcrumb();
         if (tg?.BackButton) {
           tg.BackButton.show();
           tg.BackButton.onClick(() => openSection('topics'));
@@ -1022,12 +1292,23 @@
 
     function handleSearch() {
       const q = document.getElementById('search-input').value.trim().toLowerCase();
+      
       if (!q) {
-        returnToDashboard();
+        if (currentView === 'cards') {
+          document.getElementById('cards-list').innerHTML = createCardsHtml(currentActiveContextData);
+        } else if (currentView === 'khotbeh') {
+          renderKhotbehList();
+        } else if (currentView === 'dashboard') {
+          returnToDashboard();
+        }
         return;
       }
 
-      const results = allData.filter(item => {
+      const searchPool = (currentActiveContextData && currentActiveContextData.length > 0) 
+        ? currentActiveContextData 
+        : allData;
+
+      const results = searchPool.filter(item => {
         const t = (item.title || "").toLowerCase();
         const s = (item.speaker || "").toLowerCase();
         const m = (item.macro_topic || "").toLowerCase();
@@ -1036,8 +1317,14 @@
         return t.includes(q) || s.includes(q) || m.includes(q) || st.includes(q) || tags.includes(q);
       });
 
-      previousLayer = 'dashboard';
-      displayCards(results, 'بازگشت به صفحه اصلی');
+      if (currentView === 'cards') {
+        document.getElementById('cards-list').innerHTML = createCardsHtml(results);
+      } else if (currentView === 'khotbeh') {
+        document.getElementById('khotbeh-list').innerHTML = createCardsHtml(results, true);
+      } else {
+        previousLayer = 'dashboard';
+        displayCards(results, 'بازگشت به صفحه اصلی', `نتایج جست‌وجو: ${q}`);
+      }
     }
 
     function createCardsHtml(list, isKhotbehView = false) {
