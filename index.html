@@ -1728,7 +1728,14 @@ let targetHighlightElement = null;
         `;
       }).join('');
     }
-
+document.addEventListener('copy', function(e) {
+  const selected = window.getSelection().toString();
+  if (selected.trim().length > 20) {
+    const watermark = "\n\n📖 منبع: کانال سرای ترجمه\n🔗 @STarjomeh";
+    e.clipboardData.setData('text/plain', selected + watermark);
+    e.preventDefault();
+  }
+});
     loadData();
   </script>
 </body>
