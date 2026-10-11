@@ -568,7 +568,6 @@
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 6px 12px;
-      gap: 8px;
     }
 
     .reader-font-controls {
@@ -584,20 +583,6 @@
       padding: 4px 10px;
       border-radius: 6px;
       font-size: 0.78rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .highlight-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: #facc15;
-      color: #713f12;
-      border: none;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.76rem;
       font-weight: 700;
       cursor: pointer;
     }
@@ -621,20 +606,56 @@
       font-weight: 600;
     }
 
+    /* ضبط ومحاذاة النص المتناسقة */
     .reader-content {
       font-size: 0.95rem;
-      line-height: 2.1;
+      line-height: 2.2;
       color: var(--text-color);
-      white-space: pre-wrap;
+      text-align: justify;
+      text-justify: inter-word;
       word-break: break-word;
       user-select: text;
+      -webkit-user-select: text;
     }
 
+    .reader-content p {
+      margin-bottom: 16px;
+      text-indent: 12px;
+    }
+
+    /* تمييز النصوص وإمكانية النقر للإزالة */
     .reader-content mark {
       background-color: var(--highlight-bg);
       color: var(--highlight-color);
-      padding: 1px 3px;
+      padding: 2px 4px;
       border-radius: 4px;
+      cursor: pointer;
+      border-bottom: 1px dashed rgba(0,0,0,0.2);
+    }
+
+    /* زر التظليل العائم بجوار التحديد */
+    .floating-highlight-popover {
+      position: absolute;
+      display: none;
+      z-index: 99999;
+      background: #facc15;
+      color: #713f12;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      align-items: center;
+      gap: 5px;
+      animation: scaleUp 0.15s ease-out;
+      transform: translate(-50%, -100%);
+    }
+
+    .floating-highlight-popover svg {
+      width: 13px;
+      height: 13px;
+      fill: currentColor;
     }
 
     .back-btn {
@@ -698,7 +719,6 @@
       <p class="subtitle">آرشیو کامل دروس، پژوهش‌ها و بیانات مهدوی</p>
     </header>
 
-    <!-- نوار مسیرنما (Breadcrumb) بالای صفحه -->
     <div id="breadcrumb-bar" class="breadcrumb-bar hidden">
       <div class="breadcrumb-trail" id="breadcrumb-trail"></div>
       <button class="breadcrumb-back-btn" onclick="navigateBack()">
@@ -712,7 +732,6 @@
       <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
     </div>
 
-    <!-- داشبورد اصلی -->
     <div id="dashboard-section">
       <div class="dashboard-grid">
         <div class="dash-box full-width" onclick="openSection('khotbeh')">
@@ -729,7 +748,6 @@
       </div>
     </div>
 
-    <!-- نمای ۱: فهرست اصلی اساتید -->
     <div id="professors-view" class="category-list hidden">
       <div id="professors-list"></div>
       <button class="back-btn" onclick="returnToDashboard()">
@@ -738,7 +756,6 @@
       </button>
     </div>
 
-    <!-- نمای ۱-ب: فهرست زیرمجموعه سایر اساتید -->
     <div id="other-professors-view" class="category-list hidden">
       <div id="other-professors-list"></div>
       <button class="back-btn" onclick="openSection('professors')">
@@ -747,7 +764,6 @@
       </button>
     </div>
 
-    <!-- نمای ۲: دسته‌بندی موضوعی اصلی -->
     <div id="topics-view" class="category-list hidden">
       <div id="topics-list"></div>
       <button class="back-btn" onclick="returnToDashboard()">
@@ -756,7 +772,6 @@
       </button>
     </div>
 
-    <!-- نمای زیردسته‌ها (Sub-categories موضوعی) -->
     <div id="subtopics-view" class="category-list hidden">
       <div id="subtopics-list"></div>
       <button class="back-btn" onclick="openSection('topics')">
@@ -765,7 +780,6 @@
       </button>
     </div>
 
-    <!-- نمای ۳: خطبه‌های جمعه -->
     <div id="khotbeh-view" class="cards-container hidden">
       <div class="sort-bar">
         <span class="sort-title">خطبه‌های نماز جمعه</span>
@@ -781,7 +795,6 @@
       </button>
     </div>
 
-    <!-- نمای ۴: نمایش کارت‌های جلسات -->
     <div id="cards-view" class="cards-container hidden">
       <div id="cards-list"></div>
       <button class="back-btn" id="cards-back-btn" onclick="handleCardsBack()">
@@ -790,17 +803,14 @@
       </button>
     </div>
 
-    <!-- نمای ۵: صفحه مطالعه آنلاین (Reader View) -->
+    <!-- نافذة القراءة المحسنة -->
     <div id="reader-view" class="reader-container hidden">
       <div class="reader-toolbar">
         <div class="reader-font-controls">
           <button class="font-btn" onclick="changeFontSize(1)">A+ بزرگ‌تر</button>
           <button class="font-btn" onclick="changeFontSize(-1)">A- کوچک‌تر</button>
         </div>
-        <button class="highlight-btn" onclick="highlightSelection()">
-          <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;"><path d="M15.24 2.8a2.5 2.5 0 0 1 3.54 0l2.42 2.42a2.5 2.5 0 0 1 0 3.54L10.5 19.46l-4.96 1.42a1 1 0 0 1-1.22-1.22l1.42-4.96L15.24 2.8z"></path></svg>
-          <span>هایلایت متن انتخابی</span>
-        </button>
+        <span style="font-size:0.75rem; color:var(--text-muted);">برای حذف هایلایت، روی متن لمس کنید</span>
       </div>
 
       <div class="reader-header">
@@ -815,6 +825,12 @@
         <span>بازگشت به فهرست مطالب</span>
       </button>
     </div>
+  </div>
+
+  <!-- زر التظليل العائم الفوري -->
+  <div id="floating-highlighter" class="floating-highlight-popover" onmousedown="highlightSelection(event)" ontouchend="highlightSelection(event)">
+    <svg viewBox="0 0 24 24"><path d="M15.24 2.8a2.5 2.5 0 0 1 3.54 0l2.42 2.42a2.5 2.5 0 0 1 0 3.54L10.5 19.46l-4.96 1.42a1 1 0 0 1-1.22-1.22l1.42-4.96L15.24 2.8z"></path></svg>
+    <span>هایلایت</span>
   </div>
 
   <script>
@@ -866,7 +882,6 @@
     let navigationTrail = [{ label: 'خانه', action: () => returnToDashboard() }];
     let currentActiveContextData = [];
 
-    // متغیرهای مطالعه آنلاین
     let currentReadingItemId = null;
     let readerFontSize = 0.95;
 
@@ -1411,12 +1426,32 @@
       }
     }
 
-    // --- سیستم مطالعه آنلاین (Reader View Logic) ---
+    // --- منطق مطالعه آنلاین، التظليل وإلغاؤه ومحاذاة النص ---
 
-    // فیلتر خودکار تبدیل نمادهای غیررسمی مانند g
     function sanitizeSymbols(rawText) {
       if (!rawText) return "";
       return rawText.replace(/(^|[\s\u200c])g([\s\u200c\.\،\؛\:\!\؟]|$)/g, '$1(علیه السلام)$2');
+    }
+
+    // تنسيق النص في فقرات متباعدة ومحاذاة منظمة
+    function formatTextToParagraphs(rawText) {
+      const lines = rawText.split('\n');
+      let html = '';
+      let currentP = '';
+
+      lines.forEach(line => {
+        const trimmed = line.trim();
+        if (!trimmed) {
+          if (currentP) {
+            html += `<p>${currentP}</p>`;
+            currentP = '';
+          }
+        } else {
+          currentP += (currentP ? ' ' : '') + trimmed;
+        }
+      });
+      if (currentP) html += `<p>${currentP}</p>`;
+      return html;
     }
 
     async function openReader(itemId) {
@@ -1424,7 +1459,6 @@
       if (!item) return;
 
       currentReadingItemId = itemId;
-      const prevView = currentView;
 
       document.getElementById('dashboard-section').classList.add('hidden');
       document.getElementById('cards-view').classList.add('hidden');
@@ -1446,17 +1480,20 @@
         let text = await res.text();
         text = sanitizeSymbols(text);
 
-        // بازیابی هایلایت‌های ذخیره‌شده
+        // تحويل النص إلى فقرات مهيأة ومتناسقة
+        let formattedHtml = formatTextToParagraphs(text);
+
+        // تطبيق التظليلات المحفوظة
         const savedHighlights = JSON.parse(localStorage.getItem(`reader_highlights_${itemId}`) || "[]");
         savedHighlights.forEach(hText => {
           if (hText && hText.trim().length > 0) {
-            text = text.split(hText).join(`<mark>${hText}</mark>`);
+            formattedHtml = formattedHtml.split(hText).join(`<mark onclick="removeHighlight(this, event)">${hText}</mark>`);
           }
         });
 
-        contentEl.innerHTML = text;
+        contentEl.innerHTML = formattedHtml;
 
-        // بازیابی آخرین موقعیت اسکرول کاربر
+        // استعادة موضع القراءة السابق
         const savedScroll = localStorage.getItem(`reader_scroll_${itemId}`);
         if (savedScroll) {
           setTimeout(() => {
@@ -1474,12 +1511,12 @@
     }
 
     function closeReader() {
-      // ذخیره موقعیت فعلی اسکرول پیش از بستن
       if (currentReadingItemId) {
         localStorage.setItem(`reader_scroll_${currentReadingItemId}`, window.scrollY.toString());
       }
 
       document.getElementById('reader-view').classList.add('hidden');
+      hideFloatingHighlighter();
       navigationTrail.pop();
 
       if (previousLayer === 'khotbeh') {
@@ -1498,7 +1535,6 @@
       }
     }
 
-    // ذخیره مداوم اسکرول هنگام مطالعه
     window.addEventListener('scroll', () => {
       if (currentView === 'reader' && currentReadingItemId) {
         localStorage.setItem(`reader_scroll_${currentReadingItemId}`, window.scrollY.toString());
@@ -1510,7 +1546,34 @@
       document.getElementById('reader-content').style.fontSize = `${readerFontSize}rem`;
     }
 
-    function highlightSelection() {
+    // إظهار زر التظليل العائم فور تحديد أي نص
+    document.addEventListener('selectionchange', () => {
+      if (currentView !== 'reader') return;
+      const selection = window.getSelection();
+      const text = selection.toString().trim();
+      const highlighter = document.getElementById('floating-highlighter');
+
+      if (text.length > 1 && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
+        if (rect && rect.width > 0) {
+          highlighter.style.top = `${rect.top + window.scrollY - 10}px`;
+          highlighter.style.left = `${rect.left + rect.width / 2}px`;
+          highlighter.style.display = 'flex';
+          return;
+        }
+      }
+      hideFloatingHighlighter();
+    });
+
+    function hideFloatingHighlighter() {
+      const highlighter = document.getElementById('floating-highlighter');
+      if (highlighter) highlighter.style.display = 'none';
+    }
+
+    // تنفيذ التظليل عند لمس الزر العائم
+    function highlightSelection(e) {
+      if (e) e.preventDefault();
       const selection = window.getSelection();
       const selectedText = selection.toString().trim();
       if (!selectedText || !currentReadingItemId) return;
@@ -1523,9 +1586,25 @@
           localStorage.setItem(`reader_highlights_${currentReadingItemId}`, JSON.stringify(savedHighlights));
         }
 
-        contentEl.innerHTML = contentEl.innerHTML.split(selectedText).join(`<mark>${selectedText}</mark>`);
+        contentEl.innerHTML = contentEl.innerHTML.split(selectedText).join(`<mark onclick="removeHighlight(this, event)">${selectedText}</mark>`);
         selection.removeAllRanges();
       }
+      hideFloatingHighlighter();
+    }
+
+    // إزالة التظليل عند النقر على النص المظلل مباشرة
+    function removeHighlight(element, e) {
+      if (e) e.stopPropagation();
+      const text = element.innerText;
+      if (!currentReadingItemId) return;
+
+      let savedHighlights = JSON.parse(localStorage.getItem(`reader_highlights_${currentReadingItemId}`) || "[]");
+      savedHighlights = savedHighlights.filter(h => h !== text);
+      localStorage.setItem(`reader_highlights_${currentReadingItemId}`, JSON.stringify(savedHighlights));
+
+      const parent = element.parentNode;
+      parent.replaceChild(document.createTextNode(text), element);
+      parent.normalize();
     }
 
     function createCardsHtml(list, isKhotbehView = false) {
