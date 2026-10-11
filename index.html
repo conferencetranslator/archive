@@ -23,7 +23,11 @@
       --toggle-bg: #f1f5f9;
       --youtube: #ef4444;
       --telegram: #0284c7;
+      --read-color: #059669;
+      --read-soft: rgba(5, 150, 105, 0.1);
       --icon-theme-color: #0284c7;
+      --highlight-bg: #fef08a;
+      --highlight-color: #713f12;
     }
 
     [data-theme="dark"] {
@@ -40,7 +44,11 @@
       --toggle-bg: #182234;
       --youtube: #f87171;
       --telegram: #38bdf8;
+      --read-color: #34d399;
+      --read-soft: rgba(52, 211, 153, 0.15);
       --icon-theme-color: #facc15;
+      --highlight-bg: #854d0e;
+      --highlight-color: #fef08a;
     }
 
     * {
@@ -184,7 +192,6 @@
       color: var(--text-muted);
     }
 
-    /* نوار مسیرنما (Breadcrumb) */
     .breadcrumb-bar {
       display: flex;
       align-items: center;
@@ -484,6 +491,16 @@
       margin-top: 4px;
     }
 
+    .card-actions.three-actions {
+      grid-template-columns: 1fr;
+    }
+
+    .card-actions-subgrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
     .action-btn {
       display: inline-flex;
       align-items: center;
@@ -517,10 +534,107 @@
       border-color: rgba(239, 68, 68, 0.3);
     }
 
+    .action-btn.read {
+      background: var(--read-soft);
+      color: var(--read-color);
+      border-color: var(--read-color);
+      font-weight: 700;
+    }
+
     .action-btn svg {
       width: 15px;
       height: 15px;
       fill: currentColor;
+    }
+
+    /* نمای مطالعه آنلاین (Reader View) */
+    .reader-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+      position: relative;
+    }
+
+    .reader-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--toggle-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 6px 12px;
+      gap: 8px;
+    }
+
+    .reader-font-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .font-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text-color);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .highlight-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #facc15;
+      color: #713f12;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .reader-header {
+      border-bottom: 1px dashed var(--border);
+      padding-bottom: 10px;
+    }
+
+    .reader-header h2 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .reader-speaker {
+      font-size: 0.82rem;
+      color: var(--accent);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .reader-content {
+      font-size: 0.95rem;
+      line-height: 2.1;
+      color: var(--text-color);
+      white-space: pre-wrap;
+      word-break: break-word;
+      user-select: text;
+    }
+
+    .reader-content mark {
+      background-color: var(--highlight-bg);
+      color: var(--highlight-color);
+      padding: 1px 3px;
+      border-radius: 4px;
     }
 
     .back-btn {
@@ -675,6 +789,32 @@
         <span id="cards-back-text">بازگشت</span>
       </button>
     </div>
+
+    <!-- نمای ۵: صفحه مطالعه آنلاین (Reader View) -->
+    <div id="reader-view" class="reader-container hidden">
+      <div class="reader-toolbar">
+        <div class="reader-font-controls">
+          <button class="font-btn" onclick="changeFontSize(1)">A+ بزرگ‌تر</button>
+          <button class="font-btn" onclick="changeFontSize(-1)">A- کوچک‌تر</button>
+        </div>
+        <button class="highlight-btn" onclick="highlightSelection()">
+          <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;"><path d="M15.24 2.8a2.5 2.5 0 0 1 3.54 0l2.42 2.42a2.5 2.5 0 0 1 0 3.54L10.5 19.46l-4.96 1.42a1 1 0 0 1-1.22-1.22l1.42-4.96L15.24 2.8z"></path></svg>
+          <span>هایلایت متن انتخابی</span>
+        </button>
+      </div>
+
+      <div class="reader-header">
+        <h2 id="reader-title">عنوان درس</h2>
+        <div class="reader-speaker" id="reader-speaker">نام استاد</div>
+      </div>
+
+      <div id="reader-content" class="reader-content">در حال بارگذاری متن...</div>
+
+      <button class="back-btn" onclick="closeReader()">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        <span>بازگشت به فهرست مطالب</span>
+      </button>
+    </div>
   </div>
 
   <script>
@@ -726,7 +866,10 @@
     let navigationTrail = [{ label: 'خانه', action: () => returnToDashboard() }];
     let currentActiveContextData = [];
 
-    // به‌روزرسانی نوار مسیرنما (Breadcrumb)
+    // متغیرهای مطالعه آنلاین
+    let currentReadingItemId = null;
+    let readerFontSize = 0.95;
+
     function updateBreadcrumb() {
       const bar = document.getElementById('breadcrumb-bar');
       const trailContainer = document.getElementById('breadcrumb-trail');
@@ -758,7 +901,6 @@
       });
     }
 
-    // تنظیم عنوان و عملکرد هوشمند باکس سرچ بر اساس موقعیت
     function setSearchContext(placeholderText, contextData = null) {
       const input = document.getElementById('search-input');
       input.value = '';
@@ -766,8 +908,11 @@
       currentActiveContextData = contextData;
     }
 
-    // بازگشت به مرحله قبل
     function navigateBack() {
+      if (currentView === 'reader') {
+        closeReader();
+        return;
+      }
       if (navigationTrail.length > 1) {
         const target = navigationTrail[navigationTrail.length - 2];
         if (target && target.action) {
@@ -780,7 +925,6 @@
       }
     }
 
-    // فهرست ۹ استاد شاخص اصلی
     const customProfessors = [
       { name: "سید احمدالحسن (علیه السلام)", match: ["سید احمد الحسن", "احمدالحسن"] },
       { name: "مرحوم سید شیخ حسن الحمامی (ره)", match: ["حسن الحمامی", "الحمامی"] },
@@ -1080,6 +1224,7 @@
       document.getElementById('subtopics-view').classList.add('hidden');
       document.getElementById('khotbeh-view').classList.add('hidden');
       document.getElementById('cards-view').classList.add('hidden');
+      document.getElementById('reader-view').classList.add('hidden');
 
       currentView = sec;
 
@@ -1131,6 +1276,7 @@
       document.getElementById('subtopics-view').classList.add('hidden');
       document.getElementById('khotbeh-view').classList.add('hidden');
       document.getElementById('cards-view').classList.add('hidden');
+      document.getElementById('reader-view').classList.add('hidden');
 
       setSearchContext('جست‌وجوی سراسری در تمام فایل‌ها...', null);
       updateBreadcrumb();
@@ -1158,6 +1304,7 @@
       document.getElementById('subtopics-view').classList.add('hidden');
       document.getElementById('khotbeh-view').classList.add('hidden');
       document.getElementById('dashboard-section').classList.add('hidden');
+      document.getElementById('reader-view').classList.add('hidden');
 
       if (previousLayer === 'professors') {
         navigationTrail = [
@@ -1264,6 +1411,123 @@
       }
     }
 
+    // --- سیستم مطالعه آنلاین (Reader View Logic) ---
+
+    // فیلتر خودکار تبدیل نمادهای غیررسمی مانند g
+    function sanitizeSymbols(rawText) {
+      if (!rawText) return "";
+      return rawText.replace(/(^|[\s\u200c])g([\s\u200c\.\،\؛\:\!\؟]|$)/g, '$1(علیه السلام)$2');
+    }
+
+    async function openReader(itemId) {
+      const item = allData.find(d => d.id === itemId);
+      if (!item) return;
+
+      currentReadingItemId = itemId;
+      const prevView = currentView;
+
+      document.getElementById('dashboard-section').classList.add('hidden');
+      document.getElementById('cards-view').classList.add('hidden');
+      document.getElementById('khotbeh-view').classList.add('hidden');
+      document.getElementById('reader-view').classList.remove('hidden');
+
+      currentView = 'reader';
+      navigationTrail.push({ label: 'مطالعه آنلاین', action: null });
+      updateBreadcrumb();
+
+      document.getElementById('reader-title').innerText = item.title || "";
+      document.getElementById('reader-speaker').innerText = item.speaker || "";
+      const contentEl = document.getElementById('reader-content');
+      contentEl.innerHTML = 'در حال دریافت متن...';
+
+      try {
+        const res = await fetch(`texts/${itemId}.txt?t=` + new Date().getTime());
+        if (!res.ok) throw new Error("فایل متنی یافت نشد");
+        let text = await res.text();
+        text = sanitizeSymbols(text);
+
+        // بازیابی هایلایت‌های ذخیره‌شده
+        const savedHighlights = JSON.parse(localStorage.getItem(`reader_highlights_${itemId}`) || "[]");
+        savedHighlights.forEach(hText => {
+          if (hText && hText.trim().length > 0) {
+            text = text.split(hText).join(`<mark>${hText}</mark>`);
+          }
+        });
+
+        contentEl.innerHTML = text;
+
+        // بازیابی آخرین موقعیت اسکرول کاربر
+        const savedScroll = localStorage.getItem(`reader_scroll_${itemId}`);
+        if (savedScroll) {
+          setTimeout(() => {
+            window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'smooth' });
+          }, 150);
+        }
+      } catch (err) {
+        contentEl.innerHTML = '<span style="color:#ef4444;">متن این درس هنوز بارگذاری نشده یا در دسترس نیست.</span>';
+      }
+
+      if (tg?.BackButton) {
+        tg.BackButton.show();
+        tg.BackButton.onClick(closeReader);
+      }
+    }
+
+    function closeReader() {
+      // ذخیره موقعیت فعلی اسکرول پیش از بستن
+      if (currentReadingItemId) {
+        localStorage.setItem(`reader_scroll_${currentReadingItemId}`, window.scrollY.toString());
+      }
+
+      document.getElementById('reader-view').classList.add('hidden');
+      navigationTrail.pop();
+
+      if (previousLayer === 'khotbeh') {
+        document.getElementById('khotbeh-view').classList.remove('hidden');
+        currentView = 'khotbeh';
+      } else {
+        document.getElementById('cards-view').classList.remove('hidden');
+        currentView = 'cards';
+      }
+
+      updateBreadcrumb();
+
+      if (tg?.BackButton) {
+        tg.BackButton.show();
+        tg.BackButton.onClick(handleCardsBack);
+      }
+    }
+
+    // ذخیره مداوم اسکرول هنگام مطالعه
+    window.addEventListener('scroll', () => {
+      if (currentView === 'reader' && currentReadingItemId) {
+        localStorage.setItem(`reader_scroll_${currentReadingItemId}`, window.scrollY.toString());
+      }
+    }, { passive: true });
+
+    function changeFontSize(delta) {
+      readerFontSize = Math.max(0.8, Math.min(1.4, readerFontSize + delta * 0.08));
+      document.getElementById('reader-content').style.fontSize = `${readerFontSize}rem`;
+    }
+
+    function highlightSelection() {
+      const selection = window.getSelection();
+      const selectedText = selection.toString().trim();
+      if (!selectedText || !currentReadingItemId) return;
+
+      const contentEl = document.getElementById('reader-content');
+      if (contentEl.innerText.includes(selectedText)) {
+        const savedHighlights = JSON.parse(localStorage.getItem(`reader_highlights_${currentReadingItemId}`) || "[]");
+        if (!savedHighlights.includes(selectedText)) {
+          savedHighlights.push(selectedText);
+          localStorage.setItem(`reader_highlights_${currentReadingItemId}`, JSON.stringify(savedHighlights));
+        }
+
+        contentEl.innerHTML = contentEl.innerHTML.split(selectedText).join(`<mark>${selectedText}</mark>`);
+        selection.removeAllRanges();
+      }
+    }
+
     function createCardsHtml(list, isKhotbehView = false) {
       if (!list || list.length === 0) {
         return '<div style="text-align:center; padding:30px; color:var(--text-muted); font-size:0.9rem;">موردی یافت نشد.</div>';
@@ -1287,10 +1551,30 @@
              </a>`
           : '';
 
+        const readBtn = item.has_text
+          ? `<button class="action-btn read" onclick="openReader(${item.id})">
+               <svg viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+               <span>مطالعه آنلاین متن</span>
+             </button>`
+          : '';
+
         const tagsHtml = (item.tags || []).slice(0, 5).map(t => `<span class="tag-badge">#${t}</span>`).join('');
 
         const showTopicBadge = !isKhotbehView && !isKhotbeh(item);
         const topicMetaHtml = showTopicBadge ? `<span class="meta-badge">${item.macro_topic}</span>` : '';
+
+        const actionsLayout = item.has_text
+          ? `<div class="card-actions three-actions">
+               ${readBtn}
+               <div class="card-actions-subgrid">
+                 ${tgBtn}
+                 ${ytBtn}
+               </div>
+             </div>`
+          : `<div class="card-actions">
+               ${tgBtn}
+               ${ytBtn}
+             </div>`;
 
         return `
           <div class="item-card">
@@ -1301,10 +1585,7 @@
             </div>
             <div class="card-desc">${item.session_topic}</div>
             <div class="card-tags">${tagsHtml}</div>
-            <div class="card-actions">
-              ${tgBtn}
-              ${ytBtn}
-            </div>
+            ${actionsLayout}
           </div>
         `;
       }).join('');
