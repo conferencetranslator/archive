@@ -781,9 +781,6 @@
         <div class="dash-box" onclick="openSection('topics')">
           <span class="dash-title">دسته‌بندی موضوعی</span>
         </div>
-<div class="dash-box full-width" onclick="openSmartLibrary()">
-        <span class="dash-title">📚 کتابخانه هوشمند دعوت یمانی (ع)</span>
-      </div>
       </div>
     </div>
 
@@ -1731,16 +1728,8 @@ let targetHighlightElement = null;
         `;
       }).join('');
     }
-function openSmartLibrary() {
-      const libraryUrl = "https://books.ahmadalhassan.com";
-      if (window.Telegram?.WebApp?.openLink) {
-        window.Telegram.WebApp.openLink(libraryUrl);
-      } else {
-        window.open(libraryUrl, '_blank');
-      }
-    }
 
-   loadData();
+    loadData();
   </script>
 </body>
 </html>
