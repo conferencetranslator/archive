@@ -632,24 +632,22 @@
       cursor: pointer;
       border-bottom: 1px dashed rgba(0,0,0,0.2);
     }
-
-    /* زر التظليل العائم بجوار التحديد */
+/* دکمه شناور هایلایت - زیر متن انتخابی */
     .floating-highlight-popover {
       position: absolute;
       display: none;
       z-index: 99999;
       background: #facc15;
       color: #713f12;
-      padding: 6px 12px;
+      padding: 7px 14px;
       border-radius: 20px;
-      font-size: 0.78rem;
+      font-size: 0.80rem;
       font-weight: 800;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
       cursor: pointer;
       align-items: center;
-      gap: 5px;
-      animation: scaleUp 0.15s ease-out;
-      transform: translate(-50%, -100%);
+      gap: 6px;
+      transform: translate(-50%, 8px);
     }
 
     .floating-highlight-popover svg {
@@ -658,6 +656,44 @@
       fill: currentColor;
     }
 
+    /* کادر اختصاصی تایید حذف هایلایت */
+    .highlight-delete-popover {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      border-radius: 16px;
+      padding: 10px 16px;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      z-index: 100000;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .btn-delete-hl {
+      background: #ef4444;
+      color: #ffffff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.80rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-cancel-hl {
+      background: var(--toggle-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.80rem;
+      cursor: pointer;
+    }
     .back-btn {
       display: flex;
       align-items: center;
@@ -803,16 +839,14 @@
       </button>
     </div>
 
-    <!-- نافذة القراءة المحسنة -->
+    <!-- پنجره مطالعه آنلاین -->
     <div id="reader-view" class="reader-container hidden">
       <div class="reader-toolbar">
         <div class="reader-font-controls">
           <button class="font-btn" onclick="changeFontSize(1)">A+ بزرگ‌تر</button>
           <button class="font-btn" onclick="changeFontSize(-1)">A- کوچک‌تر</button>
         </div>
-        <span style="font-size:0.75rem; color:var(--text-muted);">برای حذف هایلایت، روی متن لمس کنید</span>
-      </div>
-
+</div>
       <div class="reader-header">
         <h2 id="reader-title">عنوان درس</h2>
         <div class="reader-speaker" id="reader-speaker">نام استاد</div>
@@ -832,7 +866,12 @@
     <svg viewBox="0 0 24 24"><path d="M15.24 2.8a2.5 2.5 0 0 1 3.54 0l2.42 2.42a2.5 2.5 0 0 1 0 3.54L10.5 19.46l-4.96 1.42a1 1 0 0 1-1.22-1.22l1.42-4.96L15.24 2.8z"></path></svg>
     <span>هایلایت</span>
   </div>
-
+<!-- کادر تایید حذف هایلایت انتخابی -->
+  <div id="highlight-delete-popover" class="highlight-delete-popover">
+    <span style="font-size:0.82rem; color:var(--text-color); font-weight:600;">حذف علامت هایلایت؟</span>
+    <button class="btn-delete-hl" onclick="confirmDeleteHighlight()">🗑 بله، حذف شود</button>
+    <button class="btn-cancel-hl" onclick="closeDeletePopover()">انصراف</button>
+  </div>
   <script>
     const tg = window.Telegram?.WebApp;
     if (tg) {
@@ -1546,7 +1585,9 @@
       document.getElementById('reader-content').style.fontSize = `${readerFontSize}rem`;
     }
 
-    // إظهار زر التظليل العائم فور تحديد أي نص
+let targetHighlightElement = null;
+
+    // موقعیت‌سنجی دکمه شناور: دقیقاً در زیر آخرین سطر متن انتخابی (جلوگیری از برخورد با منوی کپی)
     document.addEventListener('selectionchange', () => {
       if (currentView !== 'reader') return;
       const selection = window.getSelection();
@@ -1555,10 +1596,12 @@
 
       if (text.length > 1 && selection.rangeCount > 0) {
         const range = selection.getRangeAt(0);
-        const rect = range.getBoundingClientRect();
-        if (rect && rect.width > 0) {
-          highlighter.style.top = `${rect.top + window.scrollY - 10}px`;
-          highlighter.style.left = `${rect.left + rect.width / 2}px`;
+        const rects = range.getClientRects();
+        
+        if (rects.length > 0) {
+          const lastRect = rects[rects.length - 1];
+          highlighter.style.top = `${lastRect.bottom + window.scrollY}px`;
+          highlighter.style.left = `${lastRect.left + (lastRect.width / 2)}px`;
           highlighter.style.display = 'flex';
           return;
         }
@@ -1571,7 +1614,7 @@
       if (highlighter) highlighter.style.display = 'none';
     }
 
-    // تنفيذ التظليل عند لمس الزر العائم
+    // هایلایت کردن متن انتخاب‌شده
     function highlightSelection(e) {
       if (e) e.preventDefault();
       const selection = window.getSelection();
@@ -1592,19 +1635,35 @@
       hideFloatingHighlighter();
     }
 
-    // إزالة التظليل عند النقر على النص المظلل مباشرة
+    // باز کردن کادر تأیید حذف با لمس روی متن هایلایت‌شده
     function removeHighlight(element, e) {
       if (e) e.stopPropagation();
-      const text = element.innerText;
-      if (!currentReadingItemId) return;
+      targetHighlightElement = element;
+      const popover = document.getElementById('highlight-delete-popover');
+      if (popover) popover.style.display = 'flex';
+    }
 
+    // تأیید نهایی و حذف کامل هایلایت از صفحه و حافظه
+    function confirmDeleteHighlight() {
+      if (!targetHighlightElement || !currentReadingItemId) return;
+
+      const text = targetHighlightElement.innerText;
       let savedHighlights = JSON.parse(localStorage.getItem(`reader_highlights_${currentReadingItemId}`) || "[]");
       savedHighlights = savedHighlights.filter(h => h !== text);
       localStorage.setItem(`reader_highlights_${currentReadingItemId}`, JSON.stringify(savedHighlights));
 
-      const parent = element.parentNode;
-      parent.replaceChild(document.createTextNode(text), element);
+      const parent = targetHighlightElement.parentNode;
+      parent.replaceChild(document.createTextNode(text), targetHighlightElement);
       parent.normalize();
+
+      closeDeletePopover();
+    }
+
+    // بستن پنجره انصراف
+    function closeDeletePopover() {
+      targetHighlightElement = null;
+      const popover = document.getElementById('highlight-delete-popover');
+      if (popover) popover.style.display = 'none';
     }
 
     function createCardsHtml(list, isKhotbehView = false) {
