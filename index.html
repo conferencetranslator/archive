@@ -606,7 +606,6 @@
       font-weight: 600;
     }
 
-    /* ضبط ومحاذاة النص المتناسقة */
     .reader-content {
       font-size: 0.95rem;
       line-height: 2.2;
@@ -623,7 +622,6 @@
       text-indent: 12px;
     }
 
-    /* تمييز النصوص وإمكانية النقر للإزالة */
     .reader-content mark {
       background-color: var(--highlight-bg);
       color: var(--highlight-color);
@@ -632,7 +630,8 @@
       cursor: pointer;
       border-bottom: 1px dashed rgba(0,0,0,0.2);
     }
-/* دکمه شناور هایلایت - زیر متن انتخابی */
+
+    /* دکمه شناور هایلایت - زیر متن انتخابی */
     .floating-highlight-popover {
       position: absolute;
       display: none;
@@ -694,6 +693,7 @@
       font-size: 0.80rem;
       cursor: pointer;
     }
+
     .back-btn {
       display: flex;
       align-items: center;
@@ -846,7 +846,7 @@
           <button class="font-btn" onclick="changeFontSize(1)">A+ بزرگ‌تر</button>
           <button class="font-btn" onclick="changeFontSize(-1)">A- کوچک‌تر</button>
         </div>
-</div>
+      </div>
       <div class="reader-header">
         <h2 id="reader-title">عنوان درس</h2>
         <div class="reader-speaker" id="reader-speaker">نام استاد</div>
@@ -861,17 +861,19 @@
     </div>
   </div>
 
-  <!-- زر التظليل العائم الفوري -->
+  <!-- دکمه شناور هایلایت -->
   <div id="floating-highlighter" class="floating-highlight-popover" onmousedown="highlightSelection(event)" ontouchend="highlightSelection(event)">
     <svg viewBox="0 0 24 24"><path d="M15.24 2.8a2.5 2.5 0 0 1 3.54 0l2.42 2.42a2.5 2.5 0 0 1 0 3.54L10.5 19.46l-4.96 1.42a1 1 0 0 1-1.22-1.22l1.42-4.96L15.24 2.8z"></path></svg>
     <span>هایلایت</span>
   </div>
-<!-- کادر تایید حذف هایلایت انتخابی -->
+
+  <!-- کادر تایید حذف هایلایت انتخابی -->
   <div id="highlight-delete-popover" class="highlight-delete-popover">
     <span style="font-size:0.82rem; color:var(--text-color); font-weight:600;">حذف علامت هایلایت؟</span>
     <button class="btn-delete-hl" onclick="confirmDeleteHighlight()">🗑 بله، حذف شود</button>
     <button class="btn-cancel-hl" onclick="closeDeletePopover()">انصراف</button>
   </div>
+
   <script>
     const tg = window.Telegram?.WebApp;
     if (tg) {
@@ -1253,13 +1255,24 @@
       }
     }
 
+    // --- تابع اصلاح‌شده برای مرتب‌سازی خطبه‌ها بر اساس تاریخ ---
     function renderKhotbehList() {
       let items = allData.filter(isKhotbeh);
-      if (currentKhotbehSort === 'desc') {
-        items.sort((a, b) => b.id - a.id);
-      } else {
-        items.sort((a, b) => a.id - b.id);
-      }
+      
+      items.sort((a, b) => {
+        const dateA = a.date || ""; 
+        const dateB = b.date || "";
+        
+        if (currentKhotbehSort === 'desc') {
+          // اگر تاریخ نداشتند یا برابر بود، بر اساس id مرتب می‌شوند تا در هر شرایطی کار کند
+          if (dateA === dateB) return b.id - a.id; 
+          return dateB.localeCompare(dateA); // مرتب‌سازی از جدید به قدیم
+        } else {
+          if (dateA === dateB) return a.id - b.id;
+          return dateA.localeCompare(dateB); // مرتب‌سازی از قدیم به جدید
+        }
+      });
+      
       document.getElementById('khotbeh-list').innerHTML = createCardsHtml(items, true);
     }
 
@@ -1465,14 +1478,11 @@
       }
     }
 
-    // --- منطق مطالعه آنلاین، التظليل وإلغاؤه ومحاذاة النص ---
-
     function sanitizeSymbols(rawText) {
       if (!rawText) return "";
-      return rawText.replace(/(^|[\s\u200c])g([\s\u200c\.\،\؛\:\!\؟]|$)/g, '$1(علیه السلام)$2');
+      return rawText.replace(/(^|[\s\u200c])g([\s\u200c\.\,\;\:\!\?]|$)/g, '$1(علیه السلام)$2');
     }
 
-    // تنسيق النص في فقرات متباعدة ومحاذاة منظمة
     function formatTextToParagraphs(rawText) {
       const lines = rawText.split('\n');
       let html = '';
@@ -1519,10 +1529,8 @@
         let text = await res.text();
         text = sanitizeSymbols(text);
 
-        // تحويل النص إلى فقرات مهيأة ومتناسقة
         let formattedHtml = formatTextToParagraphs(text);
 
-        // تطبيق التظليلات المحفوظة
         const savedHighlights = JSON.parse(localStorage.getItem(`reader_highlights_${itemId}`) || "[]");
         savedHighlights.forEach(hText => {
           if (hText && hText.trim().length > 0) {
@@ -1532,7 +1540,6 @@
 
         contentEl.innerHTML = formattedHtml;
 
-        // استعادة موضع القراءة السابق
         const savedScroll = localStorage.getItem(`reader_scroll_${itemId}`);
         if (savedScroll) {
           setTimeout(() => {
@@ -1585,9 +1592,8 @@
       document.getElementById('reader-content').style.fontSize = `${readerFontSize}rem`;
     }
 
-let targetHighlightElement = null;
+    let targetHighlightElement = null;
 
-    // موقعیت‌سنجی دکمه شناور: دقیقاً در زیر آخرین سطر متن انتخابی (جلوگیری از برخورد با منوی کپی)
     document.addEventListener('selectionchange', () => {
       if (currentView !== 'reader') return;
       const selection = window.getSelection();
@@ -1614,7 +1620,6 @@ let targetHighlightElement = null;
       if (highlighter) highlighter.style.display = 'none';
     }
 
-    // هایلایت کردن متن انتخاب‌شده
     function highlightSelection(e) {
       if (e) e.preventDefault();
       const selection = window.getSelection();
@@ -1635,7 +1640,6 @@ let targetHighlightElement = null;
       hideFloatingHighlighter();
     }
 
-    // باز کردن کادر تأیید حذف با لمس روی متن هایلایت‌شده
     function removeHighlight(element, e) {
       if (e) e.stopPropagation();
       targetHighlightElement = element;
@@ -1643,7 +1647,6 @@ let targetHighlightElement = null;
       if (popover) popover.style.display = 'flex';
     }
 
-    // تأیید نهایی و حذف کامل هایلایت از صفحه و حافظه
     function confirmDeleteHighlight() {
       if (!targetHighlightElement || !currentReadingItemId) return;
 
@@ -1659,7 +1662,6 @@ let targetHighlightElement = null;
       closeDeletePopover();
     }
 
-    // بستن پنجره انصراف
     function closeDeletePopover() {
       targetHighlightElement = null;
       const popover = document.getElementById('highlight-delete-popover');
