@@ -1260,16 +1260,19 @@
       let items = allData.filter(isKhotbeh);
       
       items.sort((a, b) => {
-        const dateA = a.date || ""; 
-        const dateB = b.date || "";
+        // ترفند: فایل‌های بدون تاریخ (خطبه‌های فعلی) با یک عدد بسیار بزرگ مقداردهی می‌شوند
+        // تا همیشه در بخش "جدیدترین" بالاتر از این ۳۲ خطبه قدیمی قرار بگیرند
+        const dateA = a.date || "9999-99-99"; 
+        const dateB = b.date || "9999-99-99";
         
         if (currentKhotbehSort === 'desc') {
-          // اگر تاریخ نداشتند یا برابر بود، بر اساس id مرتب می‌شوند تا در هر شرایطی کار کند
+          // دکمه جدیدترین
           if (dateA === dateB) return b.id - a.id; 
-          return dateB.localeCompare(dateA); // مرتب‌سازی از جدید به قدیم
+          return dateB.localeCompare(dateA); 
         } else {
+          // دکمه قدیمی‌ترین
           if (dateA === dateB) return a.id - b.id;
-          return dateA.localeCompare(dateB); // مرتب‌سازی از قدیم به جدید
+          return dateA.localeCompare(dateB); 
         }
       });
       
