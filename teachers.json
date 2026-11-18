@@ -1,0 +1,182 @@
+[
+  {
+    "id": "ahmed_alhasan",
+    "name": "سید احمدالحسن (علیه السلام)",
+    "group": "main_page",
+    "links": {
+      "x": "https://x.com/Ahmedalhasan313",
+      "facebook": "https://www.facebook.com/share/1Fy9zBeAKA/",
+      "youtube": ""
+    }
+  },
+  {
+    "id": "friday_sermons",
+    "name": "خطبه‌های نماز جمعه (ممثلیة البصرة)",
+    "group": "main_page",
+    "links": {
+      "x": "https://x.com/MumathliyaBasra",
+      "facebook": "https://www.facebook.com/momatileat.Basrah10313",
+      "youtube": ""
+    }
+  },
+  {
+    "id": "hamami",
+    "name": "مرحوم سید شیخ حسن الحمامی (ره)",
+    "group": "teachers",
+    "links": {
+      "x": "",
+      "facebook": "",
+      "youtube": ""
+    }
+  },
+  {
+    "id": "alaa_salem",
+    "name": "دکتر علاء السالم",
+    "group": "teachers",
+    "links": {
+      "x": "https://x.com/alaaalsalem24",
+      "facebook": "https://www.facebook.com/share/1E8NAUbR7J/",
+      "youtube": ""
+    }
+  },
+  {
+    "id": "nazem_aloqili",
+    "name": "دکتر شیخ ناظم العقیلی",
+    "group": "teachers",
+    "links": {
+      "x": "https://x.com/Aloqili13",
+      "facebook": "https://www.facebook.com/share/1J7hUGTLMt/",
+      "youtube": ""
+    }
+  },
+  {
+    "id": "wathiq_alhusseini",
+    "name": "دکتر سید واثق الحسینی",
+    "group": "teachers",
+    "links": {
+      "x": "https://x.com/ALhusaini313",
+      "facebook": "https://www.facebook.com/share/1LyR388ZBr/",
+      "youtube": ""
+    }
+  },
+  {
+    "id": "habib_saeedi",
+    "name": "شیخ حبیب السعیدی",
+    "group": "teachers",
+    "links": {
+      "x": "https://x.com/abwmhdy31966672",
+      "facebook": "",
+      "youtube": ""
+    }
+  },
+  {
+    "id": "dirawi",
+    "name": "دکتر عبدالرزاق الدیراوی",
+    "group": "teachers",
+    "links": {
+      "x": "https://x.com/AldyrawyD80332",
+      "facebook": "https://www.facebook.com/share/19NKZhBrG8/",
+      "youtube": ""
+    }
+  },
+  {
+    "id": "tawfiq_almaghrebi",
+    "name": "پروفسور دکتر توفیق المغربی",
+    "group": "teachers",
+    "links": {
+      "x": "https://x.com/MasrourTawfik",
+      "facebook": "",
+      "youtube": ""
+    }
+  },
+  {
+    "id": "aldaawa_main",
+    "name": "الدعوة المهدویة",
+    "group": "teachers",
+    "links": {
+      "x": "https://x.com/MahdiMedia13",
+      "facebook": "",
+      "youtube": "https://www.youtube.com/@mahdimedia313"
+    }
+  },
+  {
+    "id": "ebtesam_ahmed",
+    "name": "دکتر ابتسام احمد",
+    "group": "aldaawa",
+    "links": {
+      "x": "",
+      "facebook": "",
+      "youtube": ""
+    }
+  },
+  {
+    "id": "raad_alshammari",
+    "name": "استاد رعد الشمری",
+    "group": "aldaawa",
+    "links": {
+      "x": "",
+      "facebook": "",
+      "youtube": ""
+    }
+  },
+  {
+    "id": "ali_hussein",
+    "name": "استاد علی حسین",
+    "group": "aldaawa",
+    "links": {
+      "x": "",
+      "facebook": "",
+      "youtube": ""
+    }
+  },
+  {
+    "id": "ostad_mohammad",
+    "name": "استاد محمد",
+    "group": "aldaawa",
+    "links": {
+      "x": "",
+      "facebook": "",
+      "youtube": ""
+    }
+  },
+  {
+    "id": "mohammad_almansouri",
+    "name": "استاد محمد المنصوری",
+    "group": "aldaawa",
+    "links": {
+      "x": "",
+      "facebook": "",
+      "youtube": ""
+    }
+  },
+  {
+    "id": "ahmed_hattab",
+    "name": "دکتر احمد حطاب",
+    "group": "aldaawa",
+    "links": {
+      "x": "",
+      "facebook": "",
+      "youtube": ""
+    }
+  },
+  {
+    "id": "salam_alsehlani",
+    "name": "شیخ سلام السهلانی",
+    "group": "aldaawa",
+    "links": {
+      "x": "",
+      "facebook": "",
+      "youtube": ""
+    }
+  },
+  {
+    "id": "soheil_altalafari",
+    "name": "شیخ سهیل التلعفری",
+    "group": "aldaawa",
+    "links": {
+      "x": "",
+      "facebook": "",
+      "youtube": ""
+    }
+  }
+]
