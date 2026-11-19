@@ -1,1 +1,15 @@
-
+{
+  "bot_username": "STarjomehPostBot",
+  "app_short_name": "archive",
+  "show_category_on_card": true,
+  "show_teacher_avatar": false,
+  "slider": {
+    "enabled": false,
+    "items": [
+      {
+        "image": "images/slide1.jpg",
+        "link": ""
+      }
+    ]
+  }
+}
