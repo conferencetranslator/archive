@@ -2,7 +2,9 @@
   {
     "id": "ahmed_alhasan",
     "name": "سید احمدالحسن (علیه السلام)",
+    "aliases": ["سید احمد الحسن", "سید احمدالحسن"],
     "group": "main_page",
+    "avatar": "",
     "links": {
       "x": "https://x.com/Ahmedalhasan313",
       "facebook": "https://www.facebook.com/share/1Fy9zBeAKA/",
@@ -12,7 +14,9 @@
   {
     "id": "friday_sermons",
     "name": "خطبه‌های نماز جمعه (ممثلیة البصرة)",
+    "aliases": ["خطبه‌های نماز جمعه", "ممثلیة البصرة"],
     "group": "main_page",
+    "avatar": "",
     "links": {
       "x": "https://x.com/MumathliyaBasra",
       "facebook": "https://www.facebook.com/momatileat.Basrah10313",
@@ -20,9 +24,24 @@
     }
   },
   {
+    "id": "dawa_mahdawia",
+    "name": "الدعوة المهدویة",
+    "aliases": ["اعلام الدعوة المهدویة"],
+    "group": "teachers",
+    "type": "group",
+    "avatar": "",
+    "links": {
+      "x": "https://x.com/MahdiMedia13",
+      "facebook": "",
+      "youtube": "https://www.youtube.com/@mahdimedia313"
+    }
+  },
+  {
     "id": "hamami",
     "name": "مرحوم سید شیخ حسن الحمامی (ره)",
+    "aliases": ["سید شیخ حسن الحمامی", "شیخ حسن الحمامی"],
     "group": "teachers",
+    "avatar": "",
     "links": {
       "x": "",
       "facebook": "",
@@ -32,7 +51,9 @@
   {
     "id": "alaa_salem",
     "name": "دکتر علاء السالم",
+    "aliases": ["دکتر علا سالم", "دکتر علاء سالم"],
     "group": "teachers",
+    "avatar": "",
     "links": {
       "x": "https://x.com/alaaalsalem24",
       "facebook": "https://www.facebook.com/share/1E8NAUbR7J/",
@@ -40,9 +61,11 @@
     }
   },
   {
-    "id": "nazem_aloqili",
+    "id": "nazem_oqaili",
     "name": "دکتر شیخ ناظم العقیلی",
+    "aliases": ["شیخ ناظم العقیلی", "دکتر ناظم العقیلی", "شیخ ناظم"],
     "group": "teachers",
+    "avatar": "",
     "links": {
       "x": "https://x.com/Aloqili13",
       "facebook": "https://www.facebook.com/share/1J7hUGTLMt/",
@@ -50,9 +73,11 @@
     }
   },
   {
-    "id": "wathiq_alhusseini",
-    "name": "دکتر سید واثق الحسینی",
+    "id": "watheq_husaini",
+    "name": "دکتر سید شیخ واثق الحسینی",
+    "aliases": ["سید شیخ واثق الحسینی", "سید واثق الحسینی", "سید واثق"],
     "group": "teachers",
+    "avatar": "",
     "links": {
       "x": "https://x.com/ALhusaini313",
       "facebook": "https://www.facebook.com/share/1LyR388ZBr/",
@@ -62,7 +87,9 @@
   {
     "id": "habib_saeedi",
     "name": "شیخ حبیب السعیدی",
+    "aliases": ["شیخ حبیب سعیدی"],
     "group": "teachers",
+    "avatar": "",
     "links": {
       "x": "https://x.com/abwmhdy31966672",
       "facebook": "",
@@ -70,9 +97,11 @@
     }
   },
   {
-    "id": "dirawi",
+    "id": "abdulrazzaq_dirawi",
     "name": "دکتر عبدالرزاق الدیراوی",
+    "aliases": ["دکتر عبدالرزاق دیراوی", "دکتر دیراوی"],
     "group": "teachers",
+    "avatar": "",
     "links": {
       "x": "https://x.com/AldyrawyD80332",
       "facebook": "https://www.facebook.com/share/19NKZhBrG8/",
@@ -80,9 +109,11 @@
     }
   },
   {
-    "id": "tawfiq_almaghrebi",
+    "id": "tawfik_maghribi",
     "name": "پروفسور دکتر توفیق المغربی",
+    "aliases": ["دکتر توفیق المغربی", "دکتر توفیق"],
     "group": "teachers",
+    "avatar": "",
     "links": {
       "x": "https://x.com/MasrourTawfik",
       "facebook": "",
@@ -90,19 +121,12 @@
     }
   },
   {
-    "id": "aldaawa_main",
-    "name": "الدعوة المهدویة",
-    "group": "teachers",
-    "links": {
-      "x": "https://x.com/MahdiMedia13",
-      "facebook": "",
-      "youtube": "https://www.youtube.com/@mahdimedia313"
-    }
-  },
-  {
-    "id": "ebtesam_ahmed",
+    "id": "ebtesam_ahmad",
     "name": "دکتر ابتسام احمد",
-    "group": "aldaawa",
+    "aliases": [],
+    "group": "teachers",
+    "parent_id": "dawa_mahdawia",
+    "avatar": "",
     "links": {
       "x": "",
       "facebook": "",
@@ -110,9 +134,12 @@
     }
   },
   {
-    "id": "raad_alshammari",
+    "id": "raad_shammari",
     "name": "استاد رعد الشمری",
-    "group": "aldaawa",
+    "aliases": ["استاد رعد شمری"],
+    "group": "teachers",
+    "parent_id": "dawa_mahdawia",
+    "avatar": "",
     "links": {
       "x": "",
       "facebook": "",
@@ -122,7 +149,10 @@
   {
     "id": "ali_hussein",
     "name": "استاد علی حسین",
-    "group": "aldaawa",
+    "aliases": [],
+    "group": "teachers",
+    "parent_id": "dawa_mahdawia",
+    "avatar": "",
     "links": {
       "x": "",
       "facebook": "",
@@ -132,7 +162,10 @@
   {
     "id": "ostad_mohammad",
     "name": "استاد محمد",
-    "group": "aldaawa",
+    "aliases": [],
+    "group": "teachers",
+    "parent_id": "dawa_mahdawia",
+    "avatar": "",
     "links": {
       "x": "",
       "facebook": "",
@@ -140,9 +173,12 @@
     }
   },
   {
-    "id": "mohammad_almansouri",
+    "id": "mohammad_mansouri",
     "name": "استاد محمد المنصوری",
-    "group": "aldaawa",
+    "aliases": ["استاد محمد منصوری"],
+    "group": "teachers",
+    "parent_id": "dawa_mahdawia",
+    "avatar": "",
     "links": {
       "x": "",
       "facebook": "",
@@ -150,9 +186,12 @@
     }
   },
   {
-    "id": "ahmed_hattab",
+    "id": "ahmad_hattab",
     "name": "دکتر احمد حطاب",
-    "group": "aldaawa",
+    "aliases": [],
+    "group": "teachers",
+    "parent_id": "dawa_mahdawia",
+    "avatar": "",
     "links": {
       "x": "",
       "facebook": "",
@@ -160,9 +199,12 @@
     }
   },
   {
-    "id": "salam_alsehlani",
+    "id": "salam_sahlani",
     "name": "شیخ سلام السهلانی",
-    "group": "aldaawa",
+    "aliases": ["شیخ سلام سهلانی"],
+    "group": "teachers",
+    "parent_id": "dawa_mahdawia",
+    "avatar": "",
     "links": {
       "x": "",
       "facebook": "",
@@ -170,9 +212,12 @@
     }
   },
   {
-    "id": "soheil_altalafari",
+    "id": "suhail_talafari",
     "name": "شیخ سهیل التلعفری",
-    "group": "aldaawa",
+    "aliases": ["شیخ سهيل التلعفري"],
+    "group": "teachers",
+    "parent_id": "dawa_mahdawia",
+    "avatar": "",
     "links": {
       "x": "",
       "facebook": "",
