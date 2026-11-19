@@ -1,1742 +1,1319 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>آرشیو سرای ترجمه</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
-
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
   <style>
     :root {
-      --bg-color: #f8fafc;
-      --card-bg: #ffffff;
-      --card-hover: #f1f5f9;
-      --text-color: #0f172a;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --accent: #0284c7;
-      --accent-soft: rgba(2, 132, 199, 0.08);
-      --badge-bg: #f1f5f9;
-      --badge-text: #475569;
-      --toggle-bg: #f1f5f9;
-      --youtube: #ef4444;
-      --telegram: #0284c7;
-      --read-color: #059669;
-      --read-soft: rgba(5, 150, 105, 0.1);
-      --icon-theme-color: #0284c7;
-      --highlight-bg: #fef08a;
-      --highlight-color: #713f12;
-    }
-
-    [data-theme="dark"] {
-      --bg-color: #0c1322;
-      --card-bg: #182234;
-      --card-hover: #223048;
-      --text-color: #f8fafc;
-      --text-muted: #94a3b8;
-      --border: rgba(255, 255, 255, 0.08);
-      --accent: #38bdf8;
-      --accent-soft: rgba(56, 189, 248, 0.12);
-      --badge-bg: rgba(255, 255, 255, 0.06);
-      --badge-text: #cbd5e1;
-      --toggle-bg: #182234;
-      --youtube: #f87171;
-      --telegram: #38bdf8;
-      --read-color: #34d399;
-      --read-soft: rgba(52, 211, 153, 0.15);
-      --icon-theme-color: #facc15;
-      --highlight-bg: #854d0e;
-      --highlight-color: #fef08a;
+      --bg: var(--tg-theme-bg-color, #f4f6f9);
+      --secondary-bg: var(--tg-theme-secondary-bg-color, #ffffff);
+      --text: var(--tg-theme-text-color, #1e293b);
+      --hint: var(--tg-theme-hint-color, #64748b);
+      --accent: var(--tg-theme-button-color, #1d4ed8);
+      --accent-text: var(--tg-theme-button-text-color, #ffffff);
+      --border: rgba(148, 163, 184, 0.22);
+      --card-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+      --group-bg: rgba(29, 78, 216, 0.06);
+      --group-border: rgba(29, 78, 216, 0.22);
+      --radius: 14px;
     }
 
     * {
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
       margin: 0;
       padding: 0;
-      font-family: "Vazirmatn", -apple-system, BlinkMacSystemFont, Tahoma, sans-serif !important;
-      -webkit-tap-highlight-color: transparent;
-      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     }
 
     body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding-bottom: 78px;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 16px 14px 28px 14px;
+      overflow-x: hidden;
+    }
+
+    body.reading-mode {
+      padding-bottom: 24px;
+      background-color: var(--secondary-bg);
     }
 
     .container {
-      width: 100%;
-      max-width: 480px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 14px 16px;
     }
 
-    .welcome-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.65);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      padding: 20px;
-      animation: fadeIn 0.25s ease-out;
-    }
-
-    .welcome-box {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px 20px;
-      text-align: center;
-      width: 100%;
-      max-width: 340px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      animation: scaleUp 0.25s ease-out;
-    }
-
-    .welcome-title {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: var(--text-color);
-      margin-bottom: 8px;
-    }
-
-    .welcome-text {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 18px;
-    }
-
-    .welcome-btn {
-      width: 100%;
-      background: var(--accent);
-      color: #ffffff;
-      border: none;
-      padding: 10px;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      margin-bottom: 4px;
-    }
-
-    .brand-tag {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--accent);
-      background: var(--badge-bg);
-      padding: 4px 10px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-    }
-
-    .theme-toggle {
-      background: var(--toggle-bg);
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      width: 38px;
-      height: 38px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: var(--icon-theme-color);
-      outline: none;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.06);
-    }
-
-    .theme-toggle svg {
-      width: 20px;
-      height: 20px;
-      stroke: var(--icon-theme-color);
-      fill: none;
-      stroke-width: 2.2;
-      transition: transform 0.25s ease, stroke 0.2s ease;
-    }
-
-    .theme-toggle:active svg {
-      transform: scale(0.85);
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 2px;
-    }
-
-    h1 {
-      font-size: 1.22rem;
-      font-weight: 800;
-      color: var(--text-color);
-      margin-bottom: 4px;
-    }
-
-    p.subtitle {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-    }
-
-    .breadcrumb-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 8px 12px;
-      font-size: 0.80rem;
-      margin-top: 4px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-    }
-
-    .breadcrumb-trail {
+    /* Breadcrumbs */
+    .breadcrumbs {
       display: flex;
       align-items: center;
       gap: 6px;
       overflow-x: auto;
       white-space: nowrap;
-      color: var(--text-muted);
+      padding: 8px 16px;
+      background: var(--secondary-bg);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--hint);
+      scrollbar-width: none;
+      position: sticky;
+      top: 0;
+      z-index: 40;
     }
-
-    .breadcrumb-item {
+    .breadcrumbs::-webkit-scrollbar { display: none; }
+    .crumb-item {
       cursor: pointer;
       color: var(--accent);
-      font-weight: 600;
+      font-weight: 500;
     }
-
-    .breadcrumb-item:hover {
-      text-decoration: underline;
-    }
-
-    .breadcrumb-item.active {
-      color: var(--text-color);
+    .crumb-item.current {
+      color: var(--text);
       cursor: default;
-      font-weight: 700;
-      text-decoration: none;
-    }
-
-    .breadcrumb-separator {
-      color: var(--border);
-      font-size: 0.75rem;
-    }
-
-    .breadcrumb-back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 4px 8px;
-      border-radius: 8px;
-      background: var(--toggle-bg);
-      border: 1px solid var(--border);
-      color: var(--text-color);
-      font-size: 0.75rem;
       font-weight: 600;
-      cursor: pointer;
-      flex-shrink: 0;
+    }
+    .crumb-sep {
+      color: var(--hint);
+      opacity: 0.6;
+      user-select: none;
     }
 
+    /* Search Input */
     .search-box {
       position: relative;
-      width: 100%;
-      margin: 2px 0 0 0;
+      margin-bottom: 16px;
     }
-
-    .search-input {
+    .search-box input {
       width: 100%;
       padding: 12px 42px 12px 14px;
       border-radius: 12px;
       border: 1px solid var(--border);
-      background-color: var(--card-bg);
-      color: var(--text-color);
-      font-size: 0.88rem;
+      background: var(--secondary-bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.92rem;
       outline: none;
+      transition: border-color 0.2s;
     }
-
-    .search-input:focus {
+    .search-box input:focus {
       border-color: var(--accent);
     }
-
-    .search-icon {
+    .search-box svg {
       position: absolute;
-      right: 14px;
+      right: 13px;
       top: 50%;
       transform: translateY(-50%);
-      width: 17px;
-      height: 17px;
-      stroke: var(--text-muted);
-      fill: none;
+      width: 18px;
+      height: 18px;
+      color: var(--hint);
+      pointer-events: none;
     }
 
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+    /* Slider */
+    .slider-wrap {
+      margin-bottom: 18px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+      background: var(--secondary-bg);
+      border: 1px solid var(--border);
+    }
+    .slider-track {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .slider-track::-webkit-scrollbar { display: none; }
+    .slider-item {
+      min-width: 100%;
+      scroll-snap-align: start;
+      display: block;
+    }
+    .slider-item img {
       width: 100%;
-      margin-top: 18px;
-      margin-bottom: 6px;
+      height: 165px;
+      object-fit: cover;
+      display: block;
     }
 
-    .dash-box {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-      min-height: 80px;
-    }
-
-    .dash-box.full-width {
-      grid-column: 1 / -1;
-      width: 100%;
-    }
-
-    .dash-box:active {
-      transform: scale(0.98);
-      background: var(--card-hover);
-    }
-
-    .dash-title {
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: var(--text-color);
-      line-height: 1.4;
-    }
-
-    .sort-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--toggle-bg);
-      border: 1px solid var(--border);
-      padding: 4px;
-      border-radius: 10px;
-      margin-bottom: 8px;
-    }
-
-    .sort-title {
-      font-size: 0.80rem;
-      font-weight: 700;
-      color: var(--text-color);
-      padding-right: 8px;
-    }
-
-    .sort-options {
-      display: flex;
-      gap: 4px;
-    }
-
-    .sort-btn {
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-size: 0.76rem;
-      font-weight: 600;
-      padding: 5px 9px;
-      border-radius: 7px;
-      cursor: pointer;
-    }
-
-    .sort-btn.active {
-      background: var(--card-bg);
-      color: var(--accent);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    }
-
-    .category-list {
-      display: flex;
-      flex-direction: column;
-      gap: 9px;
-    }
-
-    .btn-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      padding: 13px 15px;
-      background-color: var(--card-bg);
-      color: var(--text-color);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      font-size: 0.90rem;
-      font-weight: 500;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-    }
-
-    .btn-item:active {
-      transform: scale(0.985);
-      background-color: var(--card-hover);
-    }
-
-    .btn-item-left {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-count {
-      display: inline-flex;
-      align-items: center;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--badge-text);
-      background-color: var(--badge-bg);
-      padding: 3px 8px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-    }
-
-    .btn-action-icon {
-      width: 14px;
-      height: 14px;
-      stroke: var(--text-muted);
-      fill: none;
-      stroke-width: 2.2;
-    }
-
-    .cards-container {
+    /* Home Grid Buttons */
+    .home-stack {
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
-
-    .item-card {
-      background: var(--card-bg);
+    .home-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .home-btn {
+      background: var(--secondary-bg);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
+      border-radius: var(--radius);
+      padding: 20px 14px;
+      text-align: center;
+      font-family: inherit;
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.15s, border-color 0.2s;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-      animation: fadeIn 0.2s ease-in;
-    }
-
-    .card-title {
-      font-size: 0.94rem;
-      font-weight: 700;
-      line-height: 1.55;
-      color: var(--text-color);
-    }
-
-    .card-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      font-size: 0.78rem;
-    }
-
-    .meta-badge {
-      background: var(--badge-bg);
-      color: var(--badge-text);
-      padding: 3px 8px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .card-desc {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-      background: var(--accent-soft);
-      padding: 10px;
-      border-radius: 8px;
-      border-right: 3px solid var(--accent);
-    }
-
-    .card-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-    }
-
-    .tag-badge {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      background: var(--badge-bg);
-      padding: 2px 7px;
-      border-radius: 5px;
-    }
-
-    .card-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 4px;
-    }
-
-    .card-actions.three-actions {
-      grid-template-columns: 1fr;
-    }
-
-    .card-actions-subgrid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .action-btn {
-      display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      padding: 8px 12px;
-      border-radius: 9px;
-      font-size: 0.80rem;
-      font-weight: 600;
-      text-decoration: none;
-      border: 1px solid var(--border);
-      cursor: pointer;
+      min-height: 76px;
     }
-
-    .action-btn.tg {
-      background: var(--accent);
-      color: #ffffff;
+    .home-btn:active {
+      transform: scale(0.98);
       border-color: var(--accent);
     }
-
-    .action-btn.tg.disabled {
-      background: var(--toggle-bg);
-      color: var(--text-muted);
-      cursor: not-allowed;
-      border-color: var(--border);
+    .home-btn.primary {
+      background: linear-gradient(135deg, var(--accent), #1e40af);
+      color: var(--accent-text);
+      border: none;
+      min-height: 88px;
+      font-size: 1.05rem;
+    }
+    .home-btn .sub {
+      font-size: 0.76rem;
+      font-weight: 400;
+      opacity: 0.78;
+      margin-top: 4px;
     }
 
-    .action-btn.yt {
-      background: transparent;
-      color: var(--youtube);
-      border-color: rgba(239, 68, 68, 0.3);
+    /* Page Header */
+    .page-header {
+      text-align: center;
+      padding: 10px 0 18px;
     }
-
-    .action-btn.read {
-      background: var(--read-soft);
-      color: var(--read-color);
-      border-color: var(--read-color);
+    .page-title {
+      font-size: 1.15rem;
       font-weight: 700;
+      color: var(--text);
     }
-
-    .action-btn svg {
-      width: 15px;
-      height: 15px;
-      fill: currentColor;
+    .social-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
     }
-
-    /* نمای مطالعه آنلاین (Reader View) */
-    .reader-container {
-      background: var(--card-bg);
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
+      background: var(--secondary-bg);
+      color: var(--text);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .social-btn svg { width: 15px; height: 15px; }
+
+    /* Center-Aligned Teacher & Group Cards */
+    .entity-list {
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-      position: relative;
+      gap: 10px;
     }
-
-    .reader-toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--toggle-bg);
+    .entity-card {
+      background: var(--secondary-bg);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 6px 12px;
-    }
-
-    .reader-font-controls {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .font-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      color: var(--text-color);
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.78rem;
-      font-weight: 700;
+      border-radius: var(--radius);
+      padding: 16px 14px;
+      text-align: center;
       cursor: pointer;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.15s, border-color 0.2s;
+    }
+    .entity-card:active {
+      transform: scale(0.99);
+      border-color: var(--accent);
+    }
+    .entity-card.is-group {
+      background: var(--group-bg);
+      border: 1px solid var(--group-border);
+    }
+    .entity-avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 8px;
+      display: block;
+      border: 1px solid var(--border);
+    }
+    .entity-name {
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .entity-meta {
+      font-size: 0.78rem;
+      color: var(--hint);
+      margin-top: 4px;
+    }
+    .entity-meta.soon {
+      opacity: 0.75;
     }
 
-    .reader-header {
-      border-bottom: 1px dashed var(--border);
-      padding-bottom: 10px;
+    /* Tabs */
+    .tabs-bar {
+      display: flex;
+      background: var(--secondary-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 16px;
+      gap: 4px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 9px 6px;
+      border: none;
+      background: transparent;
+      color: var(--hint);
+      font-family: inherit;
+      font-size: 0.86rem;
+      font-weight: 600;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .tab-btn.active {
+      background: var(--accent);
+      color: var(--accent-text);
     }
 
-    .reader-header h2 {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: var(--text-color);
-      line-height: 1.6;
+    /* Content Cards (Videos, Books, Posts) */
+    .cards-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
-
-    .reader-speaker {
-      font-size: 0.82rem;
+    .content-card {
+      background: var(--secondary-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--card-shadow);
+    }
+    .card-title {
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.65;
+    }
+    .card-speaker {
+      font-size: 0.8rem;
       color: var(--accent);
       margin-top: 4px;
-      font-weight: 600;
+      font-weight: 500;
     }
-
-    .reader-content {
-      font-size: 0.95rem;
-      line-height: 2.2;
-      color: var(--text-color);
-      text-align: justify;
-      text-justify: inter-word;
-      word-break: break-word;
-      user-select: text;
-      -webkit-user-select: text;
-    }
-
-    .reader-content p {
-      margin-bottom: 16px;
-      text-indent: 12px;
-    }
-
-    .reader-content mark {
-      background-color: var(--highlight-bg);
-      color: var(--highlight-color);
-      padding: 2px 4px;
-      border-radius: 4px;
-      cursor: pointer;
-      border-bottom: 1px dashed rgba(0,0,0,0.2);
-    }
-
-    /* دکمه شناور هایلایت - زیر متن انتخابی */
-    .floating-highlight-popover {
-      position: absolute;
-      display: none;
-      z-index: 99999;
-      background: #facc15;
-      color: #713f12;
-      padding: 7px 14px;
-      border-radius: 20px;
-      font-size: 0.80rem;
-      font-weight: 800;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-      cursor: pointer;
-      align-items: center;
-      gap: 6px;
-      transform: translate(-50%, 8px);
-    }
-
-    .floating-highlight-popover svg {
-      width: 13px;
-      height: 13px;
-      fill: currentColor;
-    }
-
-    /* کادر اختصاصی تایید حذف هایلایت */
-    .highlight-delete-popover {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-      border-radius: 16px;
-      padding: 10px 16px;
-      display: none;
-      align-items: center;
-      gap: 12px;
-      z-index: 100000;
-      animation: fadeIn 0.2s ease-out;
-    }
-
-    .btn-delete-hl {
-      background: #ef4444;
-      color: #ffffff;
-      border: none;
-      padding: 6px 12px;
+    .card-cat {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 3px 10px;
       border-radius: 8px;
-      font-size: 0.80rem;
-      font-weight: 700;
-      cursor: pointer;
+      background: rgba(148, 163, 184, 0.14);
+      color: var(--hint);
+      font-size: 0.76rem;
+      font-weight: 500;
     }
-
-    .btn-cancel-hl {
-      background: var(--toggle-bg);
-      color: var(--text-color);
-      border: 1px solid var(--border);
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.80rem;
-      cursor: pointer;
+    .card-summary {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-right: 3px solid var(--accent);
+      background: rgba(148, 163, 184, 0.08);
+      border-radius: 6px;
+      font-size: 0.84rem;
+      color: var(--text);
+      line-height: 1.75;
     }
-
-    .back-btn {
+    .card-actions {
       display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .action-btn {
+      flex: 1 1 calc(50% - 8px);
+      min-width: 120px;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      padding: 10px;
-      background: transparent;
-      border: 1px dashed var(--border);
-      color: var(--accent);
+      padding: 9px 10px;
       border-radius: 10px;
-      font-size: 0.84rem;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
       cursor: pointer;
-      margin-top: 6px;
+      transition: opacity 0.15s;
+    }
+    .action-btn:active { opacity: 0.75; }
+    .action-btn.primary {
+      background: var(--accent);
+      color: var(--accent-text);
+      border-color: var(--accent);
+    }
+    .action-btn.share {
+      flex: 0 1 auto;
+      min-width: 84px;
+      color: var(--hint);
+    }
+    .action-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* Post Card Specific */
+    .post-sort-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+    }
+    .post-sort-select {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--secondary-bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.8rem;
+      outline: none;
+    }
+    .post-date {
+      font-size: 0.78rem;
+      color: var(--hint);
+      margin-bottom: 6px;
+    }
+    .post-preview {
+      font-size: 0.9rem;
+      color: var(--text);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-height: 1.75;
+    }
+    .post-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 12px;
     }
 
-    .back-btn svg {
-      width: 14px;
-      height: 14px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2.2;
+    /* Reading Mode */
+    .reader-wrap {
+      padding: 8px 4px 20px;
+    }
+    .reader-title {
+      font-size: 1.12rem;
+      font-weight: 700;
+      line-height: 1.7;
+      margin-bottom: 8px;
+    }
+    .reader-meta {
+      font-size: 0.8rem;
+      color: var(--hint);
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .reader-body {
+      font-size: 0.98rem;
+      line-height: 2.05;
+      white-space: pre-wrap;
+      color: var(--text);
+      text-align: justify;
+    }
+    .reader-footer {
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
-    .hidden {
-      display: none !important;
+    /* Empty & Loading States */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--hint);
+      font-size: 0.92rem;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 62px;
+      background: var(--secondary-bg);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 50;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    body.reading-mode .bottom-nav {
+      display: none;
+    }
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      border: none;
+      background: transparent;
+      color: var(--hint);
+      font-family: inherit;
+      font-size: 0.74rem;
+      font-weight: 500;
+      cursor: pointer;
+      height: 100%;
+    }
+    .nav-item.active {
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .nav-item svg {
+      width: 20px;
+      height: 20px;
     }
 
-    @keyframes scaleUp {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
+    /* Section Divider in Search */
+    .section-label {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--hint);
+      margin: 18px 0 10px;
     }
   </style>
 </head>
 <body>
 
-  <div id="welcome-modal" class="welcome-overlay">
-    <div class="welcome-box">
-      <div class="welcome-title">آرشیو سرای ترجمه</div>
-      <p class="welcome-text">دسترسی هوشمند، موضوعی و مستقیم به مباحث، دروس و خطبه‌ها</p>
-      <button class="welcome-btn" onclick="closeWelcome()">ورود به برنامه</button>
-    </div>
-  </div>
+  <div id="breadcrumbs" class="breadcrumbs" style="display:none;"></div>
+  <main id="app" class="container">
+    <div class="empty-state">در حال بارگذاری آرشیو...</div>
+  </main>
 
-  <div class="container">
-    <div class="top-bar">
-      <span class="brand-tag">سرای ترجمه</span>
-      <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()" aria-label="تغییر تم">
-        <svg id="theme-icon" viewBox="0 0 24 24"></svg>
-      </button>
-    </div>
-
-    <header>
-      <h1>آرشیو سرای ترجمه</h1>
-      <p class="subtitle">آرشیو کامل دروس، پژوهش‌ها و بیانات مهدوی</p>
-    </header>
-
-    <div id="breadcrumb-bar" class="breadcrumb-bar hidden">
-      <div class="breadcrumb-trail" id="breadcrumb-trail"></div>
-      <button class="breadcrumb-back-btn" onclick="navigateBack()">
-        <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2;"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        <span>عقب</span>
-      </button>
-    </div>
-
-    <div class="search-box">
-      <input type="text" id="search-input" class="search-input" placeholder="جست‌وجوی سراسری در تمام فایل‌ها..." oninput="handleSearch()">
-      <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-    </div>
-
-    <div id="dashboard-section">
-      <div class="dashboard-grid">
-        <div class="dash-box full-width" onclick="openSection('khotbeh')">
-          <span class="dash-title">خطبه‌های نماز جمعه</span>
-        </div>
-
-        <div class="dash-box" onclick="openSection('professors')">
-          <span class="dash-title">پژوهش‌های اساتید</span>
-        </div>
-
-        <div class="dash-box" onclick="openSection('topics')">
-          <span class="dash-title">دسته‌بندی موضوعی</span>
-        </div>
-      </div>
-    </div>
-
-    <div id="professors-view" class="category-list hidden">
-      <div id="professors-list"></div>
-      <button class="back-btn" onclick="returnToDashboard()">
-        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        <span>بازگشت به منوی اصلی</span>
-      </button>
-    </div>
-
-    <div id="other-professors-view" class="category-list hidden">
-      <div id="other-professors-list"></div>
-      <button class="back-btn" onclick="openSection('professors')">
-        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        <span>بازگشت به فهرست اساتید</span>
-      </button>
-    </div>
-
-    <div id="topics-view" class="category-list hidden">
-      <div id="topics-list"></div>
-      <button class="back-btn" onclick="returnToDashboard()">
-        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        <span>بازگشت به منوی اصلی</span>
-      </button>
-    </div>
-
-    <div id="subtopics-view" class="category-list hidden">
-      <div id="subtopics-list"></div>
-      <button class="back-btn" onclick="openSection('topics')">
-        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        <span>بازگشت به دسته‌بندی موضوعی</span>
-      </button>
-    </div>
-
-    <div id="khotbeh-view" class="cards-container hidden">
-      <div class="sort-bar">
-        <span class="sort-title">خطبه‌های نماز جمعه</span>
-        <div class="sort-options">
-          <button class="sort-btn active" id="sort-desc" onclick="setKhotbehSort('desc')">جدیدترین</button>
-          <button class="sort-btn" id="sort-asc" onclick="setKhotbehSort('asc')">قدیمی‌ترین</button>
-        </div>
-      </div>
-      <div id="khotbeh-list"></div>
-      <button class="back-btn" onclick="returnToDashboard()">
-        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        <span>بازگشت به منوی اصلی</span>
-      </button>
-    </div>
-
-    <div id="cards-view" class="cards-container hidden">
-      <div id="cards-list"></div>
-      <button class="back-btn" id="cards-back-btn" onclick="handleCardsBack()">
-        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        <span id="cards-back-text">بازگشت</span>
-      </button>
-    </div>
-
-    <!-- پنجره مطالعه آنلاین -->
-    <div id="reader-view" class="reader-container hidden">
-      <div class="reader-toolbar">
-        <div class="reader-font-controls">
-          <button class="font-btn" onclick="changeFontSize(1)">A+ بزرگ‌تر</button>
-          <button class="font-btn" onclick="changeFontSize(-1)">A- کوچک‌تر</button>
-        </div>
-      </div>
-      <div class="reader-header">
-        <h2 id="reader-title">عنوان درس</h2>
-        <div class="reader-speaker" id="reader-speaker">نام استاد</div>
-      </div>
-
-      <div id="reader-content" class="reader-content">در حال بارگذاری متن...</div>
-
-      <button class="back-btn" onclick="closeReader()">
-        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        <span>بازگشت به فهرست مطالب</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- دکمه شناور هایلایت -->
-  <div id="floating-highlighter" class="floating-highlight-popover" onmousedown="highlightSelection(event)" ontouchend="highlightSelection(event)">
-    <svg viewBox="0 0 24 24"><path d="M15.24 2.8a2.5 2.5 0 0 1 3.54 0l2.42 2.42a2.5 2.5 0 0 1 0 3.54L10.5 19.46l-4.96 1.42a1 1 0 0 1-1.22-1.22l1.42-4.96L15.24 2.8z"></path></svg>
-    <span>هایلایت</span>
-  </div>
-
-  <!-- کادر تایید حذف هایلایت انتخابی -->
-  <div id="highlight-delete-popover" class="highlight-delete-popover">
-    <span style="font-size:0.82rem; color:var(--text-color); font-weight:600;">حذف علامت هایلایت؟</span>
-    <button class="btn-delete-hl" onclick="confirmDeleteHighlight()">🗑 بله، حذف شود</button>
-    <button class="btn-cancel-hl" onclick="closeDeletePopover()">انصراف</button>
-  </div>
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="nav-item active" data-nav="home" onclick="navigateRoot('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>خانه</span>
+    </button>
+    <button class="nav-item" data-nav="categories" onclick="navigateRoot('categories')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>دسته‌بندی</span>
+    </button>
+    <button class="nav-item" data-nav="search" onclick="navigateRoot('search')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>جستجو</span>
+    </button>
+  </nav>
 
   <script>
-    const tg = window.Telegram?.WebApp;
+    const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
     if (tg) {
       tg.ready();
       tg.expand();
     }
 
-    function closeWelcome() {
-      const modal = document.getElementById('welcome-modal');
-      if (modal) modal.style.display = 'none';
+    // Global State
+    const DB = {
+      config: {
+        bot_username: 'STarjomehPostBot',
+        app_short_name: 'archive',
+        show_category_on_card: true,
+        show_teacher_avatar: false,
+        slider: { enabled: false, items: [] }
+      },
+      teachers: [],
+      videos: [],
+      books: [],
+      posts: []
+    };
+
+    let navStack = []; // Array of view state objects
+
+    // Icons
+    const ICONS = {
+      search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+      book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+      download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+      video: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>',
+      share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
+      x: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
+      facebook: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4v-8.5z"/></svg>',
+      youtube: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>'
+    };
+
+    // Helpers
+    function normalizeText(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/ي/g, 'ی')
+        .replace(/ك/g, 'ک')
+        .replace(/ة/g, 'ه')
+        .replace(/\u200c/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase();
     }
-    setTimeout(closeWelcome, 3500);
 
-    const savedTheme = localStorage.getItem('user-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    applyTheme(savedTheme);
+    function toPersianDigits(num) {
+      return String(num).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    }
 
-    function applyTheme(theme) {
-      document.documentElement.setAttribute('data-theme', theme);
-      const icon = document.getElementById('theme-icon');
-      if (icon) {
-        if (theme === 'dark') {
-          icon.innerHTML = '<circle cx="12" cy="12" r="4.5" fill="#facc15" stroke="#facc15"></circle>' +
-            '<line x1="12" y1="1.5" x2="12" y2="3.5" stroke="#facc15" stroke-linecap="round"></line>' +
-            '<line x1="12" y1="20.5" x2="12" y2="22.5" stroke="#facc15" stroke-linecap="round"></line>' +
-            '<line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="#facc15" stroke-linecap="round"></line>' +
-            '<line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="#facc15" stroke-linecap="round"></line>' +
-            '<line x1="1.5" y1="12" x2="3.5" y2="12" stroke="#facc15" stroke-linecap="round"></line>' +
-            '<line x1="20.5" y1="12" x2="22.5" y2="12" stroke="#facc15" stroke-linecap="round"></line>' +
-            '<line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="#facc15" stroke-linecap="round"></line>' +
-            '<line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="#facc15" stroke-linecap="round"></line>';
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function openExternal(url) {
+      if (!url) return;
+      if (tg) {
+        if (url.startsWith('https://t.me/') || url.startsWith('http://t.me/')) {
+          tg.openTelegramLink(url);
         } else {
-          icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="#0284c7" stroke="#0284c7"></path>';
+          tg.openLink(url);
         }
+      } else {
+        window.open(url, '_blank');
       }
-      localStorage.setItem('user-theme', theme);
     }
 
-    function toggleTheme() {
-      const current = document.documentElement.getAttribute('data-theme');
-      applyTheme(current === 'dark' ? 'light' : 'dark');
+    function shareItem(type, id, title) {
+      const bot = DB.config.bot_username || 'STarjomehPostBot';
+      const app = DB.config.app_short_name || 'archive';
+      const deepLink = `https://t.me/${bot}/${app}?startapp=${type}_${id}`;
+      const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(deepLink)}&text=${encodeURIComponent(title || '')}`;
+      openExternal(shareUrl);
     }
 
-    let allData = [];
-    let currentKhotbehSort = 'desc'; 
-    let currentView = 'dashboard';
-    let previousLayer = 'dashboard';
-    let navigationTrail = [{ label: 'خانه', action: () => returnToDashboard() }];
-    let currentActiveContextData = [];
-
-    let currentReadingItemId = null;
-    let readerFontSize = 0.95;
-
-    function updateBreadcrumb() {
-      const bar = document.getElementById('breadcrumb-bar');
-      const trailContainer = document.getElementById('breadcrumb-trail');
-
-      if (currentView === 'dashboard') {
-        bar.classList.add('hidden');
-        return;
+    // Data Matching
+    function getTeacherMatchNames(teacher) {
+      const names = [normalizeText(teacher.name)];
+      if (Array.isArray(teacher.aliases)) {
+        teacher.aliases.forEach(a => names.push(normalizeText(a)));
       }
+      return names;
+    }
 
-      bar.classList.remove('hidden');
-      trailContainer.innerHTML = '';
+    function getTeacherAssets(teacher) {
+      const matchNames = getTeacherMatchNames(teacher);
+      const videos = DB.videos.filter(v => {
+        if (v.teacher_id && v.teacher_id === teacher.id) return true;
+        return matchNames.includes(normalizeText(v.speaker));
+      });
+      const books = DB.books.filter(b => {
+        if (b.teacher_id && b.teacher_id === teacher.id) return true;
+        return b.speaker && matchNames.includes(normalizeText(b.speaker));
+      });
+      const posts = DB.posts.filter(p => {
+        if (p.teacher_id && p.teacher_id === teacher.id) return true;
+        return p.speaker && matchNames.includes(normalizeText(p.speaker));
+      });
+      return { videos, books, posts };
+    }
 
-      navigationTrail.forEach((item, index) => {
-        const isLast = index === navigationTrail.length - 1;
-        const span = document.createElement('span');
-        span.className = `breadcrumb-item ${isLast ? 'active' : ''}`;
-        span.innerText = item.label;
-        if (!isLast && item.action) {
-          span.onclick = item.action;
-        }
-        trailContainer.appendChild(span);
+    function formatAssetCounts(assets) {
+      const parts = [];
+      if (assets.videos.length > 0) parts.push(`${toPersianDigits(assets.videos.length)} ویدیو`);
+      if (assets.books.length > 0) parts.push(`${toPersianDigits(assets.books.length)} کتاب`);
+      if (assets.posts.length > 0) parts.push(`${toPersianDigits(assets.posts.length)} پست`);
+      return parts.length > 0 ? parts.join(' • ') : 'به‌زودی';
+    }
 
-        if (!isLast) {
-          const sep = document.createElement('span');
-          sep.className = 'breadcrumb-separator';
-          sep.innerText = '/';
-          trailContainer.appendChild(sep);
-        }
+    function getGroupStats(groupTeacher) {
+      const children = DB.teachers.filter(t => t.parent_id === groupTeacher.id);
+      let totalAssets = 0;
+      children.forEach(c => {
+        const a = getTeacherAssets(c);
+        totalAssets += a.videos.length + a.books.length + a.posts.length;
+      });
+      const parts = [];
+      if (children.length > 0) parts.push(`${toPersianDigits(children.length)} استاد`);
+      if (totalAssets > 0) parts.push(`${toPersianDigits(totalAssets)} اثر`);
+      return parts.length > 0 ? parts.join(' • ') : 'به‌زودی';
+    }
+
+    // Navigation Engine
+    function updateTelegramBackButton() {
+      if (!tg) return;
+      if (navStack.length > 1) {
+        tg.BackButton.show();
+      } else {
+        tg.BackButton.hide();
+      }
+    }
+
+    if (tg) {
+      tg.BackButton.onClick(() => {
+        goBack();
       });
     }
 
-    function setSearchContext(placeholderText, contextData = null) {
-      const input = document.getElementById('search-input');
-      input.value = '';
-      input.placeholder = placeholderText;
-      currentActiveContextData = contextData;
+    function pushView(viewState) {
+      navStack.push(viewState);
+      renderCurrentView();
+      window.scrollTo(0, 0);
     }
 
-    function navigateBack() {
-      if (currentView === 'reader') {
-        closeReader();
+    function goBack() {
+      if (navStack.length > 1) {
+        navStack.pop();
+        renderCurrentView();
+        window.scrollTo(0, 0);
+      }
+    }
+
+    function jumpToCrumb(index) {
+      if (index < navStack.length - 1) {
+        navStack = navStack.slice(0, index + 1);
+        renderCurrentView();
+        window.scrollTo(0, 0);
+      }
+    }
+
+    function navigateRoot(viewName) {
+      const labels = { home: 'خانه', categories: 'دسته‌بندی موضوعی', search: 'جستجو' };
+      navStack = [{ view: viewName, label: labels[viewName] || 'خانه' }];
+      renderCurrentView();
+      window.scrollTo(0, 0);
+    }
+
+    function renderBreadcrumbs() {
+      const el = document.getElementById('breadcrumbs');
+      if (navStack.length <= 1) {
+        el.style.display = 'none';
         return;
       }
-      if (navigationTrail.length > 1) {
-        const target = navigationTrail[navigationTrail.length - 2];
-        if (target && target.action) {
-          target.action();
-        } else {
-          returnToDashboard();
+      el.style.display = 'flex';
+      el.innerHTML = navStack.map((item, idx) => {
+        const isLast = idx === navStack.length - 1;
+        const sep = idx > 0 ? '<span class="crumb-sep">›</span>' : '';
+        if (isLast) {
+          return `${sep}<span class="crumb-item current">${escapeHtml(item.label)}</span>`;
         }
-      } else {
-        returnToDashboard();
+        return `${sep}<span class="crumb-item" onclick="jumpToCrumb(${idx})">${escapeHtml(item.label)}</span>`;
+      }).join('');
+      el.scrollLeft = -el.scrollWidth;
+    }
+
+    function updateBottomNav(currentView) {
+      document.body.classList.toggle('reading-mode', currentView === 'reader');
+      document.querySelectorAll('.nav-item').forEach(btn => {
+        const target = btn.getAttribute('data-nav');
+        const rootView = navStack[0] ? navStack[0].view : 'home';
+        btn.classList.toggle('active', target === rootView);
+      });
+    }
+
+    function renderCurrentView() {
+      const state = navStack[navStack.length - 1];
+      updateTelegramBackButton();
+      renderBreadcrumbs();
+      updateBottomNav(state.view);
+
+      const app = document.getElementById('app');
+      switch (state.view) {
+        case 'home': renderHome(app); break;
+        case 'teachers': renderTeachersList(app, state); break;
+        case 'group': renderGroupView(app, state); break;
+        case 'profile': renderProfileView(app, state); break;
+        case 'sharai': renderSharaiView(app); break;
+        case 'categories': renderCategoriesView(app); break;
+        case 'category_detail': renderCategoryDetail(app, state); break;
+        case 'search': renderSearchView(app, state); break;
+        case 'reader': renderReaderView(app, state); break;
       }
     }
 
-    const customProfessors = [
-      { name: "سید احمدالحسن (علیه السلام)", match: ["سید احمد الحسن", "احمدالحسن"] },
-      { name: "مرحوم سید شیخ حسن الحمامی (ره)", match: ["حسن الحمامی", "الحمامی"] },
-      { name: "دکتر علاء السالم", match: ["علاء السالم", "السالم"] },
-      { name: "دکتر شیخ ناظم العقیلی", match: ["ناظم العقیلی", "العقیلی"] },
-      { name: "دکتر سید شیخ واثق الحسینی", match: ["واثق الحسینی", "الحسینی"] },
-      { name: "شیخ حبیب السعیدی", match: ["حبیب سعیدی", "حبیب السعیدی"] },
-      { name: "دکتر عبدالرزاق الدیراوی", match: ["عبدالرزاق دیراوی", "الدیراوی"] },
-      { name: "پروفسور دکتر توفیق المغربی", match: ["توفیق مغربی", "المغربی"] },
-      { name: "دکتر ابتسام احمد", match: ["ابتسام احمد"] },
-      { name: "سایر اساتید", match: [] }
-    ];
-
-    const macroTopicKeys = [
-      { key: "ادلۀ دعوت مهدوی", hasSub: true, match: ["ادلۀ دعوت", "ادله دعوت"] },
-      { key: "پاسخ به شبهات", hasSub: false, match: ["پاسخ به شبهات"] },
-      { key: "عقاید، کلام و مهدویت", hasSub: false, match: ["عقاید، کلام", "عقاید و کلام"] },
-      { key: "اخلاق و معارف", hasSub: true, match: ["اخلاق و معارف"] },
-      { key: "فقه و احکام شرعی", hasSub: false, match: ["فقه و احکام"] },
-      { key: "آموزشی - مهارتی", hasSub: false, match: ["آموزشی", "مهارتی"] },
-      { key: "ادعیه و زیارات", hasSub: false, match: ["ادعیه و زیارات"] }
-    ];
-
-    const adellehSubTopics = [
-      {
-        title: "نصوص قطعی، وصیت مقدس پیامبر (ص) و سنت الهی خلفا و علم",
-        filter: (item) => {
-          const t = (item.macro_topic || "") + " " + (item.title || "") + " " + (item.session_topic || "");
-          const tags = (item.tags || []).join(" ");
-          return (t.includes("وصیت") || tags.includes("وصیت") || t.includes("نص") || t.includes("قانون_معرفت_حجت")) &&
-                 !t.includes("رؤیا") && !t.includes("رویا") && !tags.includes("رویای_صادقه") && !t.includes("استخاره");
-        }
-      },
-      {
-        title: "شهادت ملکوت (رؤیاها و مکاشفات صادقه)",
-        filter: (item) => {
-          const t = (item.macro_topic || "") + " " + (item.title || "") + " " + (item.session_topic || "");
-          const tags = (item.tags || []).join(" ");
-          return t.includes("رؤیا") || t.includes("رویا") || tags.includes("رویای_صادقه") || t.includes("ملکوت");
-        }
-      },
-      {
-        title: "شهادت قرآن کریم و استخاره",
-        filter: (item) => {
-          const t = (item.macro_topic || "") + " " + (item.title || "") + " " + (item.session_topic || "");
-          const tags = (item.tags || []).join(" ");
-          return t.includes("استخاره") || tags.includes("استخاره") || t.includes("شهادت قرآن");
-        }
+    // 1. Home View
+    function renderHome(container) {
+      let sliderHtml = '';
+      if (DB.config.slider && DB.config.slider.enabled && Array.isArray(DB.config.slider.items) && DB.config.slider.items.length > 0) {
+        const slides = DB.config.slider.items.map(item => `
+          <a class="slider-item" href="javascript:void(0)" onclick="openExternal('${escapeHtml(item.link || '')}')">
+            <img src="${escapeHtml(item.image)}" alt="اسلاید" loading="lazy" />
+          </a>
+        `).join('');
+        sliderHtml = `<div class="slider-wrap"><div class="slider-track">${slides}</div></div>`;
       }
-    ];
 
-    const akhlaqSubTopics = [
-      {
-        title: "دروس اخلاق و معارف",
-        filter: (item) => {
-          const m = item.macro_topic || "";
-          return m.includes("اخلاق و معارف") && !m.includes("پرسش و پاسخ");
-        }
-      },
-      {
-        title: "پرسش و پاسخ",
-        filter: (item) => {
-          const m = item.macro_topic || "";
-          return m.includes("اخلاق و معارف") && m.includes("پرسش و پاسخ");
-        }
-      }
-    ];
-
-    function isKhotbeh(item) {
-      const title = item.title || "";
-      const tags = (item.tags || []).join(" ");
-      return title.includes("خطبه") || tags.includes("خطبه_جمعه");
-    }
-
-    async function loadData() {
-      try {
-        const res = await fetch('data.json?t=' + new Date().getTime());
-        allData = await res.json();
-        initDashboard();
-      } catch (err) {
-        console.error("خطا در بارگذاری پایگاه داده:", err);
-      }
-    }
-
-    function normalizeTopic(topicStr) {
-      if (!topicStr) return "سایر موضوعات";
-      for (const t of macroTopicKeys) {
-        if (t.match.some(m => topicStr.includes(m))) {
-          return t.key;
-        }
-      }
-      return topicStr;
-    }
-
-    function matchProfessor(spkName) {
-      if (!spkName) return "سایر اساتید";
-      for (const prof of customProfessors) {
-        if (prof.name === "سایر اساتید") continue;
-        if (prof.match.some(m => spkName.includes(m))) {
-          return prof.name;
-        }
-      }
-      return "سایر اساتید";
-    }
-
-    function initDashboard() {
-      const lessonItems = allData.filter(item => !isKhotbeh(item));
-      renderProfessorsList(lessonItems);
-      renderTopicsList();
-      renderKhotbehList();
-    }
-
-    function renderProfessorsList(lessonItems) {
-      const container = document.getElementById('professors-list');
-      container.innerHTML = '';
-
-      customProfessors.forEach(prof => {
-        const count = lessonItems.filter(item => matchProfessor(item.speaker) === prof.name).length;
-        
-        const btn = document.createElement('div');
-        btn.className = 'btn-item';
-        
-        if (prof.name === "سایر اساتید") {
-          btn.onclick = () => openOtherProfessors();
-        } else {
-          btn.onclick = () => showProfessorCards(prof.name);
-        }
-
-        btn.innerHTML = `
-          <span>${prof.name}</span>
-          <div class="btn-item-left">
-            <span class="btn-count">${count} فایل</span>
-            <svg class="btn-action-icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      container.innerHTML = `
+        <div class="search-box">
+          ${ICONS.search}
+          <input type="text" placeholder="جستجو در کل آرشیو..." readonly onclick="navigateRoot('search')" />
+        </div>
+        ${sliderHtml}
+        <div class="home-stack">
+          <button class="home-btn primary" onclick="openProfileById('ahmed_alhasan')">
+            <span>سید احمدالحسن (علیه السلام)</span>
+          </button>
+          <div class="home-row-2">
+            <button class="home-btn" onclick="pushView({ view: 'sharai', label: 'شرایع الاسلام' })">
+              <span>شرایع الاسلام</span>
+            </button>
+            <button class="home-btn" onclick="pushView({ view: 'teachers', label: 'پژوهش‌های اساتید', filter: '' })">
+              <span>پژوهش‌های اساتید</span>
+            </button>
           </div>
-        `;
-        container.appendChild(btn);
-      });
+          <button class="home-btn" onclick="openProfileById('friday_sermons')">
+            <span>خطبه‌های نماز جمعه</span>
+            <span class="sub">ممثلیة البصرة</span>
+          </button>
+        </div>
+      `;
     }
 
-    function openOtherProfessors() {
-      previousLayer = 'professors';
-      currentView = 'other-professors';
-      
-      navigationTrail = [
-        { label: 'خانه', action: () => returnToDashboard() },
-        { label: 'پژوهش‌های اساتید', action: () => openSection('professors') },
-        { label: 'سایر اساتید', action: () => openOtherProfessors() }
-      ];
-      updateBreadcrumb();
-
-      const lessonItems = allData.filter(item => !isKhotbeh(item) && matchProfessor(item.speaker) === "سایر اساتید");
-      setSearchContext('جست‌وجو در فهرست سایر اساتید...', lessonItems);
-
-      document.getElementById('professors-view').classList.add('hidden');
-      document.getElementById('other-professors-view').classList.remove('hidden');
-
-      const subCounts = {};
-      lessonItems.forEach(item => {
-        const spk = item.speaker?.trim() || "نامشخص";
-        subCounts[spk] = (subCounts[spk] || 0) + 1;
-      });
-
-      const container = document.getElementById('other-professors-list');
-      container.innerHTML = '';
-
-      const keys = Object.keys(subCounts).sort();
-      if (keys.length === 0) {
-        container.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted); font-size:0.9rem;">استادی یافت نشد.</div>';
-      } else {
-        keys.forEach(spkName => {
-          const btn = document.createElement('div');
-          btn.className = 'btn-item';
-          btn.onclick = () => {
-            previousLayer = 'other-professors';
-            const filtered = lessonItems.filter(item => (item.speaker?.trim() || "نامشخص") === spkName);
-            displayCards(filtered, 'بازگشت به فهرست سایر اساتید', spkName);
-          };
-          btn.innerHTML = `
-            <span>${spkName}</span>
-            <div class="btn-item-left">
-              <span class="btn-count">${subCounts[spkName]} فایل</span>
-              <svg class="btn-action-icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            </div>
-          `;
-          container.appendChild(btn);
-        });
-      }
-
-      if (tg?.BackButton) {
-        tg.BackButton.show();
-        tg.BackButton.onClick(() => openSection('professors'));
-      }
-    }
-
-    function renderTopicsList() {
-      const container = document.getElementById('topics-list');
-      container.innerHTML = '';
-
-      macroTopicKeys.forEach(top => {
-        const matchingItems = allData.filter(item => normalizeTopic(item.macro_topic) === top.key);
-        if (matchingItems.length > 0) {
-          const btn = document.createElement('div');
-          btn.className = 'btn-item';
-          btn.onclick = () => {
-            if (top.hasSub) {
-              openSubTopics(top.key);
-            } else {
-              showTopicCards(top.key);
-            }
-          };
-          btn.innerHTML = `
-            <span>${top.key}</span>
-            <div class="btn-item-left">
-              <span class="btn-count">${matchingItems.length} عنوان</span>
-              <svg class="btn-action-icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            </div>
-          `;
-          container.appendChild(btn);
-        }
-      });
-    }
-
-    function openSubTopics(parentKey) {
-      previousLayer = 'topics';
-      currentView = 'subtopics';
-      
-      navigationTrail = [
-        { label: 'خانه', action: () => returnToDashboard() },
-        { label: 'دسته‌بندی موضوعی', action: () => openSection('topics') },
-        { label: parentKey, action: () => openSubTopics(parentKey) }
-      ];
-      updateBreadcrumb();
-
-      let parentItems = allData.filter(item => normalizeTopic(item.macro_topic) === parentKey);
-      setSearchContext(`جست‌وجو در مباحث ${parentKey}...`, parentItems);
-
-      document.getElementById('topics-view').classList.add('hidden');
-      document.getElementById('subtopics-view').classList.remove('hidden');
-
-      const container = document.getElementById('subtopics-list');
-      container.innerHTML = '';
-
-      let subList = [];
-      if (parentKey === "ادلۀ دعوت مهدوی") {
-        subList = adellehSubTopics;
-      } else if (parentKey === "اخلاق و معارف") {
-        subList = akhlaqSubTopics;
-      }
-
-      subList.forEach(sub => {
-        const count = parentItems.filter(sub.filter).length;
-        const btn = document.createElement('div');
-        btn.className = 'btn-item';
-        btn.onclick = () => {
-          const filtered = parentItems.filter(sub.filter);
-          previousLayer = 'subtopics';
-          displayCards(filtered, 'بازگشت به ' + parentKey, sub.title);
-        };
-        btn.innerHTML = `
-          <span>${sub.title}</span>
-          <div class="btn-item-left">
-            <span class="btn-count">${count} عنوان</span>
-            <svg class="btn-action-icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          </div>
-        `;
-        container.appendChild(btn);
-      });
-
-      if (tg?.BackButton) {
-        tg.BackButton.show();
-        tg.BackButton.onClick(() => openSection('topics'));
-      }
-    }
-
-    // --- تابع اصلاح‌شده برای مرتب‌سازی خطبه‌ها بر اساس تاریخ ---
-    function renderKhotbehList() {
-      let items = allData.filter(isKhotbeh);
-      
-      items.sort((a, b) => {
-        const dateA = a.date || "9999-99-99"; 
-        const dateB = b.date || "9999-99-99";
-        
-        if (currentKhotbehSort === 'desc') {
-          if (dateA === dateB) return b.id - a.id; 
-          return dateB.localeCompare(dateA); 
-        } else {
-          if (dateA === dateB) return a.id - b.id;
-          return dateA.localeCompare(dateB); 
-        }
-      });
-      
-      // -- بخش جدید: نمایش هوشمند تعداد کل خطبه‌ها در نوار بالایی --
-      const titleEl = document.querySelector('#khotbeh-view .sort-title');
-      if(titleEl) {
-        titleEl.innerHTML = `خطبه‌های نماز جمعه <span class="btn-count" style="margin-right: 6px; padding: 2px 7px;">${items.length} فایل</span>`;
-      }
-      
-      document.getElementById('khotbeh-list').innerHTML = createCardsHtml(items, true);
-    }
-
-    function setKhotbehSort(type) {
-      currentKhotbehSort = type;
-      document.getElementById('sort-desc').classList.toggle('active', type === 'desc');
-      document.getElementById('sort-asc').classList.toggle('active', type === 'asc');
-      renderKhotbehList();
-    }
-
-    function openSection(sec) {
-      document.getElementById('dashboard-section').classList.add('hidden');
-      document.getElementById('professors-view').classList.add('hidden');
-      document.getElementById('other-professors-view').classList.add('hidden');
-      document.getElementById('topics-view').classList.add('hidden');
-      document.getElementById('subtopics-view').classList.add('hidden');
-      document.getElementById('khotbeh-view').classList.add('hidden');
-      document.getElementById('cards-view').classList.add('hidden');
-      document.getElementById('reader-view').classList.add('hidden');
-
-      currentView = sec;
-
-      if (sec === 'professors') {
-        document.getElementById('professors-view').classList.remove('hidden');
-        previousLayer = 'dashboard';
-        navigationTrail = [
-          { label: 'خانه', action: () => returnToDashboard() },
-          { label: 'پژوهش‌های اساتید', action: () => openSection('professors') }
-        ];
-        const profItems = allData.filter(item => !isKhotbeh(item));
-        setSearchContext('جست‌وجو در پژوهش‌های اساتید...', profItems);
-      } else if (sec === 'topics') {
-        document.getElementById('topics-view').classList.remove('hidden');
-        previousLayer = 'dashboard';
-        navigationTrail = [
-          { label: 'خانه', action: () => returnToDashboard() },
-          { label: 'دسته‌بندی موضوعی', action: () => openSection('topics') }
-        ];
-        setSearchContext('جست‌وجو در دسته‌بندی موضوعی...', allData);
-      } else if (sec === 'khotbeh') {
-        document.getElementById('khotbeh-view').classList.remove('hidden');
-        previousLayer = 'dashboard';
-        navigationTrail = [
-          { label: 'خانه', action: () => returnToDashboard() },
-          { label: 'خطبه‌های نماز جمعه', action: () => openSection('khotbeh') }
-        ];
-        const khotbehItems = allData.filter(isKhotbeh);
-        setSearchContext('جست‌وجو در خطبه‌های نماز جمعه...', khotbehItems);
-      }
-
-      updateBreadcrumb();
-
-      if (tg?.BackButton) {
-        tg.BackButton.show();
-        tg.BackButton.onClick(returnToDashboard);
-      }
-    }
-
-    function returnToDashboard() {
-      currentView = 'dashboard';
-      previousLayer = 'dashboard';
-      navigationTrail = [{ label: 'خانه', action: () => returnToDashboard() }];
-
-      document.getElementById('dashboard-section').classList.remove('hidden');
-      document.getElementById('professors-view').classList.add('hidden');
-      document.getElementById('other-professors-view').classList.add('hidden');
-      document.getElementById('topics-view').classList.add('hidden');
-      document.getElementById('subtopics-view').classList.add('hidden');
-      document.getElementById('khotbeh-view').classList.add('hidden');
-      document.getElementById('cards-view').classList.add('hidden');
-      document.getElementById('reader-view').classList.add('hidden');
-
-      setSearchContext('جست‌وجوی سراسری در تمام فایل‌ها...', null);
-      updateBreadcrumb();
-
-      if (tg?.BackButton) tg.BackButton.hide();
-    }
-
-    function showProfessorCards(profName) {
-      previousLayer = 'professors';
-      const filtered = allData.filter(item => matchProfessor(item.speaker) === profName && !isKhotbeh(item));
-      displayCards(filtered, 'بازگشت به پژوهش‌های اساتید', profName);
-    }
-
-    function showTopicCards(topicName) {
-      previousLayer = 'topics';
-      const filtered = allData.filter(item => normalizeTopic(item.macro_topic) === topicName);
-      displayCards(filtered, 'بازگشت به دسته‌بندی موضوعی', topicName);
-    }
-
-    function displayCards(items, backText, pageTitle = '') {
-      currentView = 'cards';
-      document.getElementById('professors-view').classList.add('hidden');
-      document.getElementById('other-professors-view').classList.add('hidden');
-      document.getElementById('topics-view').classList.add('hidden');
-      document.getElementById('subtopics-view').classList.add('hidden');
-      document.getElementById('khotbeh-view').classList.add('hidden');
-      document.getElementById('dashboard-section').classList.add('hidden');
-      document.getElementById('reader-view').classList.add('hidden');
-
-      if (previousLayer === 'professors') {
-        navigationTrail = [
-          { label: 'خانه', action: () => returnToDashboard() },
-          { label: 'پژوهش‌های اساتید', action: () => openSection('professors') },
-          { label: pageTitle || 'جلسات استاد', action: null }
-        ];
-      } else if (previousLayer === 'other-professors') {
-        navigationTrail = [
-          { label: 'خانه', action: () => returnToDashboard() },
-          { label: 'پژوهش‌های اساتید', action: () => openSection('professors') },
-          { label: 'سایر اساتید', action: () => openOtherProfessors() },
-          { label: pageTitle || 'جلسات استاد', action: null }
-        ];
-      } else if (previousLayer === 'topics') {
-        navigationTrail = [
-          { label: 'خانه', action: () => returnToDashboard() },
-          { label: 'دسته‌بندی موضوعی', action: () => openSection('topics') },
-          { label: pageTitle || 'جلسات', action: null }
-        ];
-      } else if (previousLayer === 'subtopics') {
-        navigationTrail.push({ label: pageTitle || 'جلسات', action: null });
-      }
-
-      updateBreadcrumb();
-      setSearchContext(`جست‌وجو در مباحث «${pageTitle || 'این بخش'}»...`, items);
-
-      document.getElementById('cards-list').innerHTML = createCardsHtml(items);
-      document.getElementById('cards-back-text').innerText = backText;
-      document.getElementById('cards-view').classList.remove('hidden');
-
-      if (tg?.BackButton) {
-        tg.BackButton.show();
-        tg.BackButton.onClick(handleCardsBack);
-      }
-    }
-
-    function handleCardsBack() {
-      if (previousLayer === 'professors') {
-        openSection('professors');
-      } else if (previousLayer === 'other-professors') {
-        document.getElementById('cards-view').classList.add('hidden');
-        document.getElementById('other-professors-view').classList.remove('hidden');
-        currentView = 'other-professors';
-        navigationTrail.pop();
-        updateBreadcrumb();
-        const lessonItems = allData.filter(item => !isKhotbeh(item) && matchProfessor(item.speaker) === "سایر اساتید");
-        setSearchContext('جست‌وجو در فهرست سایر اساتید...', lessonItems);
-        if (tg?.BackButton) {
-          tg.BackButton.show();
-          tg.BackButton.onClick(() => openSection('professors'));
-        }
-      } else if (previousLayer === 'topics') {
-        openSection('topics');
-      } else if (previousLayer === 'subtopics') {
-        document.getElementById('cards-view').classList.add('hidden');
-        document.getElementById('subtopics-view').classList.remove('hidden');
-        currentView = 'subtopics';
-        navigationTrail.pop();
-        updateBreadcrumb();
-        if (tg?.BackButton) {
-          tg.BackButton.show();
-          tg.BackButton.onClick(() => openSection('topics'));
-        }
-      } else {
-        returnToDashboard();
-      }
-    }
-
-    function handleSearch() {
-      const q = document.getElementById('search-input').value.trim().toLowerCase();
-      
-      if (!q) {
-        if (currentView === 'cards') {
-          document.getElementById('cards-list').innerHTML = createCardsHtml(currentActiveContextData);
-        } else if (currentView === 'khotbeh') {
-          renderKhotbehList();
-        } else if (currentView === 'dashboard') {
-          returnToDashboard();
-        }
-        return;
-      }
-
-      const searchPool = (currentActiveContextData && currentActiveContextData.length > 0) 
-        ? currentActiveContextData 
-        : allData;
-
-      const results = searchPool.filter(item => {
-        const t = (item.title || "").toLowerCase();
-        const s = (item.speaker || "").toLowerCase();
-        const m = (item.macro_topic || "").toLowerCase();
-        const st = (item.session_topic || "").toLowerCase();
-        const tags = (item.tags || []).join(" ").toLowerCase();
-        return t.includes(q) || s.includes(q) || m.includes(q) || st.includes(q) || tags.includes(q);
-      });
-
-      if (currentView === 'cards') {
-        document.getElementById('cards-list').innerHTML = createCardsHtml(results);
-      } else if (currentView === 'khotbeh') {
-        document.getElementById('khotbeh-list').innerHTML = createCardsHtml(results, true);
-      } else {
-        previousLayer = 'dashboard';
-        displayCards(results, 'بازگشت به صفحه اصلی', `نتایج جست‌وجو: ${q}`);
-      }
-    }
-
-    function sanitizeSymbols(rawText) {
-      if (!rawText) return "";
-      return rawText.replace(/(^|[\s\u200c])g([\s\u200c\.\,\;\:\!\?]|$)/g, '$1(علیه السلام)$2');
-    }
-
-    function formatTextToParagraphs(rawText) {
-      const lines = rawText.split('\n');
-      let html = '';
-      let currentP = '';
-
-      lines.forEach(line => {
-        const trimmed = line.trim();
-        if (!trimmed) {
-          if (currentP) {
-            html += `<p>${currentP}</p>`;
-            currentP = '';
-          }
-        } else {
-          currentP += (currentP ? ' ' : '') + trimmed;
-        }
-      });
-      if (currentP) html += `<p>${currentP}</p>`;
-      return html;
-    }
-
-    async function openReader(itemId) {
-      const item = allData.find(d => d.id === itemId);
-      if (!item) return;
-
-      currentReadingItemId = itemId;
-
-      document.getElementById('dashboard-section').classList.add('hidden');
-      document.getElementById('cards-view').classList.add('hidden');
-      document.getElementById('khotbeh-view').classList.add('hidden');
-      document.getElementById('reader-view').classList.remove('hidden');
-
-      currentView = 'reader';
-      navigationTrail.push({ label: 'مطالعه آنلاین', action: null });
-      updateBreadcrumb();
-
-      document.getElementById('reader-title').innerText = item.title || "";
-      document.getElementById('reader-speaker').innerText = item.speaker || "";
-      const contentEl = document.getElementById('reader-content');
-      contentEl.innerHTML = 'در حال دریافت متن...';
-
-      try {
-        const res = await fetch(`texts/${itemId}.txt?t=` + new Date().getTime());
-        if (!res.ok) throw new Error("فایل متنی یافت نشد");
-        let text = await res.text();
-        text = sanitizeSymbols(text);
-
-        let formattedHtml = formatTextToParagraphs(text);
-
-        const savedHighlights = JSON.parse(localStorage.getItem(`reader_highlights_${itemId}`) || "[]");
-        savedHighlights.forEach(hText => {
-          if (hText && hText.trim().length > 0) {
-            formattedHtml = formattedHtml.split(hText).join(`<mark onclick="removeHighlight(this, event)">${hText}</mark>`);
-          }
-        });
-
-        contentEl.innerHTML = formattedHtml;
-
-        const savedScroll = localStorage.getItem(`reader_scroll_${itemId}`);
-        if (savedScroll) {
-          setTimeout(() => {
-            window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'smooth' });
-          }, 150);
-        }
-      } catch (err) {
-        contentEl.innerHTML = '<span style="color:#ef4444;">متن این درس هنوز بارگذاری نشده یا در دسترس نیست.</span>';
-      }
-
-      if (tg?.BackButton) {
-        tg.BackButton.show();
-        tg.BackButton.onClick(closeReader);
-      }
-    }
-
-    function closeReader() {
-      if (currentReadingItemId) {
-        localStorage.setItem(`reader_scroll_${currentReadingItemId}`, window.scrollY.toString());
-      }
-
-      document.getElementById('reader-view').classList.add('hidden');
-      hideFloatingHighlighter();
-      navigationTrail.pop();
-
-      if (previousLayer === 'khotbeh') {
-        document.getElementById('khotbeh-view').classList.remove('hidden');
-        currentView = 'khotbeh';
-      } else {
-        document.getElementById('cards-view').classList.remove('hidden');
-        currentView = 'cards';
-      }
-
-      updateBreadcrumb();
-
-      if (tg?.BackButton) {
-        tg.BackButton.show();
-        tg.BackButton.onClick(handleCardsBack);
-      }
-    }
-
-    window.addEventListener('scroll', () => {
-      if (currentView === 'reader' && currentReadingItemId) {
-        localStorage.setItem(`reader_scroll_${currentReadingItemId}`, window.scrollY.toString());
-      }
-    }, { passive: true });
-
-    function changeFontSize(delta) {
-      readerFontSize = Math.max(0.8, Math.min(1.4, readerFontSize + delta * 0.08));
-      document.getElementById('reader-content').style.fontSize = `${readerFontSize}rem`;
-    }
-
-    let targetHighlightElement = null;
-
-    document.addEventListener('selectionchange', () => {
-      if (currentView !== 'reader') return;
-      const selection = window.getSelection();
-      const text = selection.toString().trim();
-      const highlighter = document.getElementById('floating-highlighter');
-
-      if (text.length > 1 && selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0);
-        const rects = range.getClientRects();
-        
-        if (rects.length > 0) {
-          const lastRect = rects[rects.length - 1];
-          highlighter.style.top = `${lastRect.bottom + window.scrollY}px`;
-          highlighter.style.left = `${lastRect.left + (lastRect.width / 2)}px`;
-          highlighter.style.display = 'flex';
-          return;
-        }
-      }
-      hideFloatingHighlighter();
-    });
-
-    function hideFloatingHighlighter() {
-      const highlighter = document.getElementById('floating-highlighter');
-      if (highlighter) highlighter.style.display = 'none';
-    }
-
-    function highlightSelection(e) {
-      if (e) e.preventDefault();
-      const selection = window.getSelection();
-      const selectedText = selection.toString().trim();
-      if (!selectedText || !currentReadingItemId) return;
-
-      const contentEl = document.getElementById('reader-content');
-      if (contentEl.innerText.includes(selectedText)) {
-        const savedHighlights = JSON.parse(localStorage.getItem(`reader_highlights_${currentReadingItemId}`) || "[]");
-        if (!savedHighlights.includes(selectedText)) {
-          savedHighlights.push(selectedText);
-          localStorage.setItem(`reader_highlights_${currentReadingItemId}`, JSON.stringify(savedHighlights));
-        }
-
-        contentEl.innerHTML = contentEl.innerHTML.split(selectedText).join(`<mark onclick="removeHighlight(this, event)">${selectedText}</mark>`);
-        selection.removeAllRanges();
-      }
-      hideFloatingHighlighter();
-    }
-
-    function removeHighlight(element, e) {
-      if (e) e.stopPropagation();
-      targetHighlightElement = element;
-      const popover = document.getElementById('highlight-delete-popover');
-      if (popover) popover.style.display = 'flex';
-    }
-
-    function confirmDeleteHighlight() {
-      if (!targetHighlightElement || !currentReadingItemId) return;
-
-      const text = targetHighlightElement.innerText;
-      let savedHighlights = JSON.parse(localStorage.getItem(`reader_highlights_${currentReadingItemId}`) || "[]");
-      savedHighlights = savedHighlights.filter(h => h !== text);
-      localStorage.setItem(`reader_highlights_${currentReadingItemId}`, JSON.stringify(savedHighlights));
-
-      const parent = targetHighlightElement.parentNode;
-      parent.replaceChild(document.createTextNode(text), targetHighlightElement);
-      parent.normalize();
-
-      closeDeletePopover();
-    }
-
-    function closeDeletePopover() {
-      targetHighlightElement = null;
-      const popover = document.getElementById('highlight-delete-popover');
-      if (popover) popover.style.display = 'none';
-    }
-
-    function createCardsHtml(list, isKhotbehView = false) {
-      if (!list || list.length === 0) {
-        return '<div style="text-align:center; padding:30px; color:var(--text-muted); font-size:0.9rem;">موردی یافت نشد.</div>';
-      }
-
-      return list.map(item => {
-        const hasTg = item.telegram_link && item.telegram_link.trim().length > 0;
-        const tgBtn = hasTg 
-          ? `<a href="${item.telegram_link}" target="_blank" class="action-btn tg">
-               <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-               دریافت فایل (PDF)
-             </a>`
-          : `<span class="action-btn tg disabled">
-               <span>فایل به‌زودی</span>
-             </span>`;
-
-        const ytBtn = item.youtube_link && item.youtube_link.trim().length > 0
-          ? `<a href="${item.youtube_link}" target="_blank" class="action-btn yt">
-               <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-               ویدیوی اصلی (عربی)
-             </a>`
-          : '';
-
-        const readBtn = item.has_text
-          ? `<button class="action-btn read" onclick="openReader(${item.id})">
-               <svg viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-               <span>مطالعه آنلاین متن</span>
-             </button>`
-          : '';
-
-        const tagsHtml = (item.tags || []).slice(0, 5).map(t => `<span class="tag-badge">#${t}</span>`).join('');
-
-        const showTopicBadge = !isKhotbehView && !isKhotbeh(item);
-        const topicMetaHtml = showTopicBadge ? `<span class="meta-badge">${item.macro_topic}</span>` : '';
-
-        const actionsLayout = item.has_text
-          ? `<div class="card-actions three-actions">
-               ${readBtn}
-               <div class="card-actions-subgrid">
-                 ${tgBtn}
-                 ${ytBtn}
-               </div>
-             </div>`
-          : `<div class="card-actions">
-               ${tgBtn}
-               ${ytBtn}
-             </div>`;
-
+    // 2. Teachers List View
+    function renderTeachersList(container, state) {
+      const q = normalizeText(state.filter || '');
+      const groups = DB.teachers.filter(t => t.group === 'teachers' && t.type === 'group');
+      const singles = DB.teachers.filter(t => t.group === 'teachers' && t.type !== 'group' && !t.parent_id);
+
+      const filterFn = t => !q || normalizeText(t.name).includes(q) || (t.aliases && t.aliases.some(a => normalizeText(a).includes(q)));
+      const filteredGroups = groups.filter(filterFn);
+      const filteredSingles = singles.filter(filterFn);
+
+      const groupCards = filteredGroups.map(g => `
+        <div class="entity-card is-group" onclick="openGroupById('${g.id}')">
+          ${DB.config.show_teacher_avatar && g.avatar ? `<img class="entity-avatar" src="${escapeHtml(g.avatar)}" />` : ''}
+          <div class="entity-name">${escapeHtml(g.name)}</div>
+          <div class="entity-meta">${getGroupStats(g)}</div>
+        </div>
+      `).join('');
+
+      const singleCards = filteredSingles.map(t => {
+        const meta = formatAssetCounts(getTeacherAssets(t));
         return `
-          <div class="item-card">
-            <div class="card-title">${item.title}</div>
-            <div class="card-meta">
-              <span class="meta-badge">${item.speaker}</span>
-              ${topicMetaHtml}
-            </div>
-            <div class="card-desc">${item.session_topic}</div>
-            <div class="card-tags">${tagsHtml}</div>
-            ${actionsLayout}
+          <div class="entity-card" onclick="openProfileById('${t.id}')">
+            ${DB.config.show_teacher_avatar && t.avatar ? `<img class="entity-avatar" src="${escapeHtml(t.avatar)}" />` : ''}
+            <div class="entity-name">${escapeHtml(t.name)}</div>
+            <div class="entity-meta ${meta === 'به‌زودی' ? 'soon' : ''}">${meta}</div>
           </div>
         `;
       }).join('');
+
+      container.innerHTML = `
+        <div class="page-header">
+          <div class="page-title">پژوهش‌های اساتید</div>
+        </div>
+        <div class="search-box">
+          ${ICONS.search}
+          <input type="text" id="teacherFilterInput" placeholder="جستجوی نام استاد یا گروه..." value="${escapeHtml(state.filter || '')}" oninput="updateLocalFilter(this.value)" />
+        </div>
+        <div class="entity-list">
+          ${groupCards}
+          ${singleCards}
+          ${!groupCards && !singleCards ? '<div class="empty-state">موردی یافت نشد.</div>' : ''}
+        </div>
+      `;
+      if (state.filter) {
+        const inp = document.getElementById('teacherFilterInput');
+        if (inp) { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }
+      }
     }
 
-    loadData();
+    function updateLocalFilter(val) {
+      navStack[navStack.length - 1].filter = val;
+      renderCurrentView();
+    }
+
+    // 3. Group View (e.g., Dawa Mahdawia)
+    function openGroupById(id) {
+      const group = DB.teachers.find(t => t.id === id);
+      if (!group) return;
+      pushView({ view: 'group', groupId: id, label: group.name, filter: '' });
+    }
+
+    function renderGroupView(container, state) {
+      const group = DB.teachers.find(t => t.id === state.groupId);
+      if (!group) return;
+      const q = normalizeText(state.filter || '');
+      const children = DB.teachers.filter(t => t.parent_id === group.id)
+        .filter(t => !q || normalizeText(t.name).includes(q));
+
+      const cards = children.map(t => {
+        const meta = formatAssetCounts(getTeacherAssets(t));
+        return `
+          <div class="entity-card" onclick="openProfileById('${t.id}')">
+            ${DB.config.show_teacher_avatar && t.avatar ? `<img class="entity-avatar" src="${escapeHtml(t.avatar)}" />` : ''}
+            <div class="entity-name">${escapeHtml(t.name)}</div>
+            <div class="entity-meta ${meta === 'به‌زودی' ? 'soon' : ''}">${meta}</div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <div class="page-header">
+          <div class="page-title">${escapeHtml(group.name)}</div>
+          ${renderSocialLinks(group.links)}
+        </div>
+        <div class="search-box">
+          ${ICONS.search}
+          <input type="text" id="groupFilterInput" placeholder="جستجو در این بخش..." value="${escapeHtml(state.filter || '')}" oninput="updateLocalFilter(this.value)" />
+        </div>
+        <div class="entity-list">
+          ${cards || '<div class="empty-state">به‌زودی</div>'}
+        </div>
+      `;
+      if (state.filter) {
+        const inp = document.getElementById('groupFilterInput');
+        if (inp) { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }
+      }
+    }
+
+    function renderSocialLinks(links) {
+      if (!links) return '';
+      const btns = [];
+      if (links.x) btns.push(`<a class="social-btn" href="javascript:void(0)" onclick="openExternal('${escapeHtml(links.x)}')">${ICONS.x}<span>X</span></a>`);
+      if (links.youtube) btns.push(`<a class="social-btn" href="javascript:void(0)" onclick="openExternal('${escapeHtml(links.youtube)}')">${ICONS.youtube}<span>YouTube</span></a>`);
+      if (links.facebook) btns.push(`<a class="social-btn" href="javascript:void(0)" onclick="openExternal('${escapeHtml(links.facebook)}')">${ICONS.facebook}<span>Facebook</span></a>`);
+      return btns.length ? `<div class="social-row">${btns.join('')}</div>` : '';
+    }
+
+    // 4. Profile View (Teacher / Main Entity)
+    function openProfileById(id) {
+      const teacher = DB.teachers.find(t => t.id === id);
+      if (!teacher) return;
+      pushView({ view: 'profile', teacherId: id, label: teacher.name, activeTab: null, postSort: 'newest' });
+    }
+
+    function renderProfileView(container, state) {
+      const teacher = DB.teachers.find(t => t.id === state.teacherId);
+      if (!teacher) return;
+      const assets = getTeacherAssets(teacher);
+
+      const availableTabs = [];
+      if (assets.videos.length > 0) availableTabs.push({ key: 'videos', label: `ویدیوها (${toPersianDigits(assets.videos.length)})` });
+      if (assets.books.length > 0) availableTabs.push({ key: 'books', label: `کتاب‌ها (${toPersianDigits(assets.books.length)})` });
+      if (assets.posts.length > 0) availableTabs.push({ key: 'posts', label: `پست‌ها (${toPersianDigits(assets.posts.length)})` });
+
+      if (!state.activeTab || !availableTabs.some(t => t.key === state.activeTab)) {
+        state.activeTab = availableTabs.length > 0 ? availableTabs[0].key : null;
+      }
+
+      let bodyHtml = '';
+      if (availableTabs.length === 0) {
+        bodyHtml = '<div class="empty-state">به‌زودی محتوای این بخش منتشر خواهد شد.</div>';
+      } else {
+        const tabsHtml = availableTabs.length > 1 ? `
+          <div class="tabs-bar">
+            ${availableTabs.map(t => `
+              <button class="tab-btn ${state.activeTab === t.key ? 'active' : ''}" onclick="switchProfileTab('${t.key}')">${t.label}</button>
+            `).join('')}
+          </div>
+        ` : '';
+
+        let listHtml = '';
+        if (state.activeTab === 'videos') {
+          listHtml = `<div class="cards-stack">${assets.videos.map(v => renderVideoCard(v, false)).join('')}</div>`;
+        } else if (state.activeTab === 'books') {
+          listHtml = `<div class="cards-stack">${assets.books.map(b => renderBookCard(b, false)).join('')}</div>`;
+        } else if (state.activeTab === 'posts') {
+          const sorted = [...assets.posts].sort((a, b) => {
+            const da = a.date || '';
+            const db = b.date || '';
+            return state.postSort === 'oldest' ? da.localeCompare(db) : db.localeCompare(da);
+          });
+          listHtml = `
+            <div class="post-sort-bar">
+              <select class="post-sort-select" onchange="changePostSort(this.value)">
+                <option value="newest" ${state.postSort === 'newest' ? 'selected' : ''}>مرتب‌سازی: جدیدترین</option>
+                <option value="oldest" ${state.postSort === 'oldest' ? 'selected' : ''}>مرتب‌سازی: قدیمی‌ترین</option>
+              </select>
+            </div>
+            <div class="cards-stack">${sorted.map(p => renderPostCard(p)).join('')}</div>
+          `;
+        }
+        bodyHtml = tabsHtml + listHtml;
+      }
+
+      container.innerHTML = `
+        <div class="page-header">
+          <div class="page-title">${escapeHtml(teacher.name)}</div>
+          ${renderSocialLinks(teacher.links)}
+        </div>
+        ${bodyHtml}
+      `;
+    }
+
+    function switchProfileTab(tabKey) {
+      navStack[navStack.length - 1].activeTab = tabKey;
+      renderCurrentView();
+    }
+
+    function changePostSort(val) {
+      navStack[navStack.length - 1].postSort = val;
+      renderCurrentView();
+    }
+
+    // 5. Shara'i al-Islam View
+    function renderSharaiView(container) {
+      const key = normalizeText('شرایع');
+      const books = DB.books.filter(b => normalizeText(b.title).includes(key) || normalizeText(b.macro_topic).includes(key));
+      const videos = DB.videos.filter(v => normalizeText(v.title).includes(key) || normalizeText(v.macro_topic).includes(key));
+
+      let content = '';
+      if (books.length === 0 && videos.length === 0) {
+        content = '<div class="empty-state">به‌زودی محتوای بخش شرایع الاسلام منتشر خواهد شد.</div>';
+      } else {
+        content = `
+          <div class="cards-stack">
+            ${books.map(b => renderBookCard(b, true)).join('')}
+            ${videos.map(v => renderVideoCard(v, true)).join('')}
+          </div>
+        `;
+      }
+
+      container.innerHTML = `
+        <div class="page-header">
+          <div class="page-title">شرایع الاسلام</div>
+        </div>
+        ${content}
+      `;
+    }
+
+    // Cards Renderers
+    function renderVideoCard(v, showSpeaker) {
+      const showCat = DB.config.show_category_on_card && v.macro_topic;
+      const summary = v.session_topic || v.summary || '';
+      const downloadUrl = v.pdf_url || v.telegram_link || '';
+
+      const actions = [];
+      if (v.text_file) {
+        actions.push(`<button class="action-btn primary" onclick="openReader('video', '${v.id}')">${ICONS.book}<span>مطالعه آنلاین</span></button>`);
+      }
+      if (downloadUrl) {
+        actions.push(`<button class="action-btn" onclick="openExternal('${escapeHtml(downloadUrl)}')">${ICONS.download}<span>دانلود PDF</span></button>`);
+      }
+      if (v.youtube_link) {
+        actions.push(`<button class="action-btn" onclick="openExternal('${escapeHtml(v.youtube_link)}')">${ICONS.video}<span>ویدیوی اصلی (YouTube)</span></button>`);
+      }
+      if (v.facebook_link) {
+        actions.push(`<button class="action-btn" onclick="openExternal('${escapeHtml(v.facebook_link)}')">${ICONS.video}<span>ویدیوی اصلی (Facebook)</span></button>`);
+      }
+      actions.push(`<button class="action-btn share" onclick="shareItem('video', '${v.id}', '${escapeHtml(v.title)}')">${ICONS.share}<span>Share</span></button>`);
+
+      return `
+        <div class="content-card">
+          <div class="card-title">${escapeHtml(v.title)}</div>
+          ${showSpeaker && v.speaker ? `<div class="card-speaker">${escapeHtml(v.speaker)}</div>` : ''}
+          ${showCat ? `<div class="card-cat">${escapeHtml(v.macro_topic)}</div>` : ''}
+          ${summary ? `<div class="card-summary">${escapeHtml(summary)}</div>` : ''}
+          <div class="card-actions">${actions.join('')}</div>
+        </div>
+      `;
+    }
+
+    function renderBookCard(b, showSpeaker) {
+      const showCat = DB.config.show_category_on_card && b.macro_topic;
+      const summary = b.summary || '';
+      const downloadUrl = b.pdf_url || b.telegram_link || '';
+
+      const actions = [];
+      if (b.text_file) {
+        actions.push(`<button class="action-btn primary" onclick="openReader('book', '${b.id}')">${ICONS.book}<span>مطالعه آنلاین</span></button>`);
+      }
+      if (downloadUrl) {
+        actions.push(`<button class="action-btn" onclick="openExternal('${escapeHtml(downloadUrl)}')">${ICONS.download}<span>دانلود PDF</span></button>`);
+      }
+      actions.push(`<button class="action-btn share" onclick="shareItem('book', '${b.id}', '${escapeHtml(b.title)}')">${ICONS.share}<span>Share</span></button>`);
+
+      return `
+        <div class="content-card">
+          <div class="card-title">${escapeHtml(b.title)}</div>
+          ${showSpeaker && b.speaker ? `<div class="card-speaker">${escapeHtml(b.speaker)}</div>` : ''}
+          ${showCat ? `<div class="card-cat">${escapeHtml(b.macro_topic)}</div>` : ''}
+          ${summary ? `<div class="card-summary">${escapeHtml(summary)}</div>` : ''}
+          <div class="card-actions">${actions.join('')}</div>
+        </div>
+      `;
+    }
+
+    function renderPostCard(p) {
+      const preview = p.content || p.title || 'برای مشاهده متن کامل کلیک کنید...';
+      return `
+        <div class="content-card">
+          ${p.date ? `<div class="post-date">${toPersianDigits(p.date)}</div>` : ''}
+          <div class="post-preview">${escapeHtml(preview)}</div>
+          <div class="post-footer">
+            <button class="action-btn primary" style="flex:0 1 auto; padding: 8px 16px;" onclick="openReader('post', '${p.id}')">${ICONS.book}<span>مطالعه آنلاین</span></button>
+          </div>
+        </div>
+      `;
+    }
+
+    // 6. Reading Mode
+    function openReader(type, id) {
+      let item = null;
+      if (type === 'video') item = DB.videos.find(x => String(x.id) === String(id));
+      if (type === 'book') item = DB.books.find(x => String(x.id) === String(id));
+      if (type === 'post') item = DB.posts.find(x => String(x.id) === String(id));
+      if (!item) return;
+
+      pushView({
+        view: 'reader',
+        itemType: type,
+        itemId: id,
+        label: 'مطالعه آنلاین'
+      });
+    }
+
+    async function renderReaderView(container, state) {
+      let item = null;
+      if (state.itemType === 'video') item = DB.videos.find(x => String(x.id) === String(state.itemId));
+      if (state.itemType === 'book') item = DB.books.find(x => String(x.id) === String(state.itemId));
+      if (state.itemType === 'post') item = DB.posts.find(x => String(x.id) === String(state.itemId));
+
+      if (!item) {
+        container.innerHTML = '<div class="empty-state">مطلب مورد نظر یافت نشد.</div>';
+        return;
+      }
+
+      const title = item.title || '';
+      const dateStr = item.date ? `تاریخ: ${toPersianDigits(item.date)}` : '';
+
+      const sourceBtns = [];
+      if (item.source_x) sourceBtns.push(`<a class="social-btn" href="javascript:void(0)" onclick="openExternal('${escapeHtml(item.source_x)}')">${ICONS.x}<span>منبع: X</span></a>`);
+      if (item.source_facebook) sourceBtns.push(`<a class="social-btn" href="javascript:void(0)" onclick="openExternal('${escapeHtml(item.source_facebook)}')">${ICONS.facebook}<span>منبع: Facebook</span></a>`);
+      if (item.youtube_link) sourceBtns.push(`<a class="social-btn" href="javascript:void(0)" onclick="openExternal('${escapeHtml(item.youtube_link)}')">${ICONS.youtube}<span>ویدیوی اصلی</span></a>`);
+
+      container.innerHTML = `
+        <div class="reader-wrap">
+          ${title ? `<div class="reader-title">${escapeHtml(title)}</div>` : ''}
+          ${dateStr ? `<div class="reader-meta">${dateStr}</div>` : ''}
+          <div id="readerBody" class="reader-body">در حال بارگذاری متن...</div>
+          <div class="reader-footer">
+            <div class="social-row" style="margin-top:0;">${sourceBtns.join('')}</div>
+            <button class="action-btn share" onclick="shareItem('${state.itemType}', '${state.itemId}', '${escapeHtml(title || 'مطالعه آنلاین')}')">${ICONS.share}<span>Share</span></button>
+          </div>
+        </div>
+      `;
+
+      const bodyEl = document.getElementById('readerBody');
+      if (item.text_file) {
+        try {
+          const res = await fetch(item.text_file);
+          if (!res.ok) throw new Error('not found');
+          bodyEl.textContent = await res.text();
+        } catch (e) {
+          bodyEl.textContent = item.content || 'خطا در بارگذاری فایل متنی.';
+        }
+      } else {
+        bodyEl.textContent = item.content || 'متنی برای نمایش ثبت نشده است.';
+      }
+    }
+
+    // 7. Categories View
+    function renderCategoriesView(container) {
+      const catMap = {};
+      DB.videos.forEach(v => {
+        if (v.macro_topic) catMap[v.macro_topic] = (catMap[v.macro_topic] || 0) + 1;
+      });
+      DB.books.forEach(b => {
+        if (b.macro_topic) catMap[b.macro_topic] = (catMap[b.macro_topic] || 0) + 1;
+      });
+
+      const cats = Object.keys(catMap).sort((a, b) => catMap[b] - catMap[a]);
+      const cards = cats.map(c => `
+        <div class="entity-card" onclick="pushView({ view: 'category_detail', category: '${escapeHtml(c)}', label: '${escapeHtml(c)}' })">
+          <div class="entity-name">${escapeHtml(c)}</div>
+          <div class="entity-meta">${toPersianDigits(catMap[c])} اثر</div>
+        </div>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="page-header">
+          <div class="page-title">دسته‌بندی موضوعی</div>
+        </div>
+        <div class="entity-list">
+          ${cards || '<div class="empty-state">دسته‌بندی ثبت نشده است.</div>'}
+        </div>
+      `;
+    }
+
+    function renderCategoryDetail(container, state) {
+      const cat = state.category;
+      const videos = DB.videos.filter(v => v.macro_topic === cat);
+      const books = DB.books.filter(b => b.macro_topic === cat);
+
+      container.innerHTML = `
+        <div class="page-header">
+          <div class="page-title">${escapeHtml(cat)}</div>
+        </div>
+        <div class="cards-stack">
+          ${videos.map(v => renderVideoCard(v, true)).join('')}
+          ${books.map(b => renderBookCard(b, true)).join('')}
+        </div>
+      `;
+    }
+
+    // 8. Global Search View (Includes hidden tags)
+    function renderSearchView(container, state) {
+      const q = normalizeText(state.query || '');
+      let resultsHtml = '';
+
+      if (!q) {
+        resultsHtml = '<div class="empty-state">عبارت مورد نظر خود را برای جستجو در کل آرشیو بنویسید.</div>';
+      } else {
+        const matchedTeachers = DB.teachers.filter(t =>
+          t.type !== 'group' && (
+            normalizeText(t.name).includes(q) ||
+            (t.aliases && t.aliases.some(a => normalizeText(a).includes(q)))
+          )
+        );
+        const matchedVideos = DB.videos.filter(v =>
+          normalizeText(v.title).includes(q) ||
+          normalizeText(v.speaker).includes(q) ||
+          normalizeText(v.macro_topic).includes(q) ||
+          normalizeText(v.session_topic).includes(q) ||
+          (Array.isArray(v.tags) && v.tags.some(tag => normalizeText(tag.replace(/_/g, ' ')).includes(q)))
+        );
+        const matchedBooks = DB.books.filter(b =>
+          normalizeText(b.title).includes(q) ||
+          normalizeText(b.macro_topic).includes(q) ||
+          normalizeText(b.summary).includes(q) ||
+          (Array.isArray(b.tags) && b.tags.some(tag => normalizeText(tag.replace(/_/g, ' ')).includes(q)))
+        );
+        const matchedPosts = DB.posts.filter(p =>
+          normalizeText(p.content).includes(q) || normalizeText(p.title).includes(q)
+        );
+
+        if (matchedTeachers.length) {
+          resultsHtml += `<div class="section-label">اساتید (${toPersianDigits(matchedTeachers.length)})</div>`;
+          resultsHtml += `<div class="entity-list">${matchedTeachers.map(t => `
+            <div class="entity-card" onclick="openProfileById('${t.id}')">
+              <div class="entity-name">${escapeHtml(t.name)}</div>
+              <div class="entity-meta">${formatAssetCounts(getTeacherAssets(t))}</div>
+            </div>
+          `).join('')}</div>`;
+        }
+        if (matchedVideos.length) {
+          resultsHtml += `<div class="section-label">ویدیوها (${toPersianDigits(matchedVideos.length)})</div>`;
+          resultsHtml += `<div class="cards-stack">${matchedVideos.map(v => renderVideoCard(v, true)).join('')}</div>`;
+        }
+        if (matchedBooks.length) {
+          resultsHtml += `<div class="section-label">کتاب‌ها (${toPersianDigits(matchedBooks.length)})</div>`;
+          resultsHtml += `<div class="cards-stack">${matchedBooks.map(b => renderBookCard(b, true)).join('')}</div>`;
+        }
+        if (matchedPosts.length) {
+          resultsHtml += `<div class="section-label">پست‌ها (${toPersianDigits(matchedPosts.length)})</div>`;
+          resultsHtml += `<div class="cards-stack">${matchedPosts.map(p => renderPostCard(p)).join('')}</div>`;
+        }
+        if (!resultsHtml) {
+          resultsHtml = '<div class="empty-state">نتیجه‌ای یافت نشد.</div>';
+        }
+      }
+
+      container.innerHTML = `
+        <div class="search-box">
+          ${ICONS.search}
+          <input type="text" id="globalSearchInput" placeholder="جستجو در عنوان، استاد، موضوع و کلیدواژه‌ها..." value="${escapeHtml(state.query || '')}" oninput="updateGlobalSearch(this.value)" />
+        </div>
+        ${resultsHtml}
+      `;
+      const inp = document.getElementById('globalSearchInput');
+      if (inp) { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }
+    }
+
+    function updateGlobalSearch(val) {
+      navStack[navStack.length - 1].query = val;
+      renderCurrentView();
+    }
+
+    // Initialization & Deep Linking
+    async function safeFetchJson(url, fallback) {
+      try {
+        const res = await fetch(`${url}?v=${Date.now()}`);
+        if (!res.ok) return fallback;
+        return await res.json();
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    function handleDeepLink() {
+      let startParam = tg && tg.initDataUnsafe ? tg.initDataUnsafe.start_param : null;
+      if (!startParam) {
+        const params = new URLSearchParams(window.location.search);
+        startParam = params.get('startapp');
+      }
+      if (!startParam) return;
+
+      const [type, ...rest] = startParam.split('_');
+      const id = rest.join('_');
+      if (!id) return;
+
+      if (type === 'video') {
+        const v = DB.videos.find(x => String(x.id) === id);
+        if (v) {
+          if (v.text_file) {
+            openReader('video', id);
+          } else {
+            const teacher = DB.teachers.find(t => getTeacherMatchNames(t).includes(normalizeText(v.speaker)));
+            if (teacher) openProfileById(teacher.id);
+          }
+        }
+      } else if (type === 'book') {
+        const b = DB.books.find(x => String(x.id) === id);
+        if (b && b.text_file) openReader('book', id);
+      } else if (type === 'post') {
+        openReader('post', id);
+      } else if (type === 'teacher') {
+        openProfileById(id);
+      }
+    }
+
+    async function init() {
+      const [config, teachers, videos, books, posts] = await Promise.all([
+        safeFetchJson('config.json', DB.config),
+        safeFetchJson('teachers.json', []),
+        safeFetchJson('data.json', []),
+        safeFetchJson('books.json', []),
+        safeFetchJson('posts.json', [])
+      ]);
+
+      DB.config = Object.assign(DB.config, config);
+      DB.teachers = Array.isArray(teachers) ? teachers : [];
+      DB.videos = Array.isArray(videos) ? videos : [];
+      DB.books = Array.isArray(books) ? books : [];
+      DB.posts = Array.isArray(posts) ? posts : [];
+
+      navStack = [{ view: 'home', label: 'خانه' }];
+      renderCurrentView();
+      handleDeepLink();
+    }
+
+    init();
   </script>
 </body>
 </html>
