@@ -8,17 +8,36 @@
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
   <style>
     :root {
-      --bg: var(--tg-theme-bg-color, #f4f6f9);
-      --secondary-bg: var(--tg-theme-secondary-bg-color, #ffffff);
-      --text: var(--tg-theme-text-color, #1e293b);
-      --hint: var(--tg-theme-hint-color, #64748b);
-      --accent: var(--tg-theme-button-color, #1d4ed8);
-      --accent-text: var(--tg-theme-button-text-color, #ffffff);
-      --border: rgba(148, 163, 184, 0.22);
-      --card-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+      --bg: #f4f6f9;
+      --secondary-bg: #ffffff;
+      --text: #1e293b;
+      --hint: #64748b;
+      --accent: #1d4ed8;
+      --accent-text: #ffffff;
+      --border: rgba(148, 163, 184, 0.25);
+      --card-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
       --group-bg: rgba(29, 78, 216, 0.06);
       --group-border: rgba(29, 78, 216, 0.22);
+      --summary-bg: rgba(148, 163, 184, 0.09);
+      --btn-x-bg: #0f172a;
+      --btn-x-text: #ffffff;
       --radius: 14px;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --secondary-bg: #1e293b;
+      --text: #f1f5f9;
+      --hint: #94a3b8;
+      --accent: #3b82f6;
+      --accent-text: #ffffff;
+      --border: rgba(148, 163, 184, 0.16);
+      --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+      --group-bg: rgba(59, 130, 246, 0.12);
+      --group-border: rgba(59, 130, 246, 0.3);
+      --summary-bg: rgba(255, 255, 255, 0.05);
+      --btn-x-bg: #f1f5f9;
+      --btn-x-text: #0f172a;
     }
 
     * {
@@ -36,6 +55,7 @@
       padding-bottom: 78px;
       min-height: 100vh;
       overflow-x: hidden;
+      transition: background-color 0.2s, color 0.2s;
     }
 
     body.reading-mode {
@@ -49,22 +69,29 @@
       padding: 14px 16px;
     }
 
-    /* Breadcrumbs */
+    /* Top Bar (Breadcrumbs + Theme Toggle) */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 14px;
+      background: var(--secondary-bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
     .breadcrumbs {
       display: flex;
       align-items: center;
       gap: 6px;
       overflow-x: auto;
       white-space: nowrap;
-      padding: 8px 16px;
-      background: var(--secondary-bg);
-      border-bottom: 1px solid var(--border);
       font-size: 0.8rem;
       color: var(--hint);
       scrollbar-width: none;
-      position: sticky;
-      top: 0;
-      z-index: 40;
+      flex: 1;
     }
     .breadcrumbs::-webkit-scrollbar { display: none; }
     .crumb-item {
@@ -81,6 +108,41 @@
       color: var(--hint);
       opacity: 0.6;
       user-select: none;
+    }
+
+    .theme-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: opacity 0.15s;
+    }
+    .theme-btn:active { opacity: 0.7; }
+    .theme-btn svg { width: 18px; height: 18px; }
+
+    /* Home Top Search + Theme Row */
+    .home-top-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .home-top-row .search-box {
+      flex: 1;
+      margin-bottom: 0;
+    }
+    .home-top-row .theme-btn {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: var(--secondary-bg);
     }
 
     /* Search Input */
@@ -177,17 +239,11 @@
       border-color: var(--accent);
     }
     .home-btn.primary {
-      background: linear-gradient(135deg, var(--accent), #1e40af);
-      color: var(--accent-text);
+      background: linear-gradient(135deg, #1d4ed8, #1e3a8a);
+      color: #ffffff;
       border: none;
       min-height: 88px;
       font-size: 1.05rem;
-    }
-    .home-btn .sub {
-      font-size: 0.76rem;
-      font-weight: 400;
-      opacity: 0.78;
-      margin-top: 4px;
     }
 
     /* Page Header */
@@ -203,7 +259,7 @@
     .social-row {
       display: flex;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       margin-top: 12px;
       flex-wrap: wrap;
     }
@@ -213,15 +269,18 @@
       gap: 6px;
       padding: 6px 14px;
       border-radius: 20px;
-      border: 1px solid var(--border);
-      background: var(--secondary-bg);
-      color: var(--text);
+      border: none;
       font-size: 0.8rem;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
       text-decoration: none;
+      transition: opacity 0.15s;
     }
+    .social-btn:active { opacity: 0.8; }
     .social-btn svg { width: 15px; height: 15px; }
+    .social-btn.btn-x { background: var(--btn-x-bg); color: var(--btn-x-text); }
+    .social-btn.btn-yt { background: #c81e1e; color: #ffffff; }
+    .social-btn.btn-fb { background: #1877f2; color: #ffffff; }
 
     /* Center-Aligned Teacher & Group Cards */
     .entity-list {
@@ -298,7 +357,7 @@
       color: var(--accent-text);
     }
 
-    /* Content Cards (Videos, Books, Posts) */
+    /* Content Cards */
     .cards-stack {
       display: flex;
       flex-direction: column;
@@ -337,7 +396,7 @@
       margin-top: 12px;
       padding: 10px 12px;
       border-right: 3px solid var(--accent);
-      background: rgba(148, 163, 184, 0.08);
+      background: var(--summary-bg);
       border-radius: 6px;
       font-size: 0.84rem;
       color: var(--text);
@@ -351,34 +410,47 @@
     }
     .action-btn {
       flex: 1 1 calc(50% - 8px);
-      min-width: 120px;
+      min-width: 125px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
       padding: 9px 10px;
       border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--text);
+      border: 1px solid transparent;
       font-family: inherit;
       font-size: 0.82rem;
       font-weight: 600;
       cursor: pointer;
-      transition: opacity 0.15s;
+      transition: opacity 0.15s, transform 0.1s;
     }
-    .action-btn:active { opacity: 0.75; }
-    .action-btn.primary {
-      background: var(--accent);
-      color: var(--accent-text);
-      border-color: var(--accent);
+    .action-btn:active { opacity: 0.82; transform: scale(0.98); }
+    .action-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* Brand & Semantic Button Colors */
+    .action-btn.btn-read {
+      background: #1d4ed8;
+      color: #ffffff;
     }
-    .action-btn.share {
+    .action-btn.btn-pdf {
+      background: #059669;
+      color: #ffffff;
+    }
+    .action-btn.btn-yt {
+      background: #c81e1e;
+      color: #ffffff;
+    }
+    .action-btn.btn-fb {
+      background: #1877f2;
+      color: #ffffff;
+    }
+    .action-btn.btn-share {
       flex: 0 1 auto;
       min-width: 84px;
-      color: var(--hint);
+      background: var(--bg);
+      color: var(--text);
+      border-color: var(--border);
     }
-    .action-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
 
     /* Post Card Specific */
     .post-sort-bar {
@@ -451,7 +523,7 @@
       gap: 10px;
     }
 
-    /* Empty & Loading States */
+    /* Empty State */
     .empty-state {
       text-align: center;
       padding: 40px 20px;
@@ -502,7 +574,6 @@
       height: 20px;
     }
 
-    /* Section Divider in Search */
     .section-label {
       font-size: 0.84rem;
       font-weight: 700;
@@ -513,7 +584,11 @@
 </head>
 <body>
 
-  <div id="breadcrumbs" class="breadcrumbs" style="display:none;"></div>
+  <div id="topBar" class="top-bar" style="display:none;">
+    <div id="breadcrumbs" class="breadcrumbs"></div>
+    <button class="theme-btn" onclick="toggleTheme()" aria-label="تغییر حالت صفحه" id="topThemeBtn"></button>
+  </div>
+
   <main id="app" class="container">
     <div class="empty-state">در حال بارگذاری آرشیو...</div>
   </main>
@@ -540,6 +615,38 @@
       tg.expand();
     }
 
+    // Theme Management
+    const ICONS_THEME = {
+      moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
+      sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'
+    };
+
+    function getInitialTheme() {
+      const saved = localStorage.getItem('archive_theme');
+      if (saved === 'dark' || saved === 'light') return saved;
+      if (tg && tg.colorScheme === 'dark') return 'dark';
+      return 'light';
+    }
+
+    let currentTheme = getInitialTheme();
+
+    function applyTheme() {
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      localStorage.setItem('archive_theme', currentTheme);
+      const icon = currentTheme === 'dark' ? ICONS_THEME.sun : ICONS_THEME.moon;
+      const topBtn = document.getElementById('topThemeBtn');
+      if (topBtn) topBtn.innerHTML = icon;
+      const homeBtn = document.getElementById('homeThemeBtn');
+      if (homeBtn) homeBtn.innerHTML = icon;
+    }
+
+    function toggleTheme() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      applyTheme();
+    }
+
+    applyTheme();
+
     // Global State
     const DB = {
       config: {
@@ -547,6 +654,7 @@
         app_short_name: 'archive',
         show_category_on_card: true,
         show_teacher_avatar: false,
+        show_sharai: false,
         slider: { enabled: false, items: [] }
       },
       teachers: [],
@@ -555,9 +663,8 @@
       posts: []
     };
 
-    let navStack = []; // Array of view state objects
+    let navStack = [];
 
-    // Icons
     const ICONS = {
       search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
       book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
@@ -674,9 +781,7 @@
     }
 
     if (tg) {
-      tg.BackButton.onClick(() => {
-        goBack();
-      });
+      tg.BackButton.onClick(() => goBack());
     }
 
     function pushView(viewState) {
@@ -708,13 +813,14 @@
       window.scrollTo(0, 0);
     }
 
-    function renderBreadcrumbs() {
+    function renderTopBar() {
+      const topBar = document.getElementById('topBar');
       const el = document.getElementById('breadcrumbs');
       if (navStack.length <= 1) {
-        el.style.display = 'none';
+        topBar.style.display = 'none';
         return;
       }
-      el.style.display = 'flex';
+      topBar.style.display = 'flex';
       el.innerHTML = navStack.map((item, idx) => {
         const isLast = idx === navStack.length - 1;
         const sep = idx > 0 ? '<span class="crumb-sep">›</span>' : '';
@@ -724,6 +830,7 @@
         return `${sep}<span class="crumb-item" onclick="jumpToCrumb(${idx})">${escapeHtml(item.label)}</span>`;
       }).join('');
       el.scrollLeft = -el.scrollWidth;
+      applyTheme();
     }
 
     function updateBottomNav(currentView) {
@@ -738,7 +845,7 @@
     function renderCurrentView() {
       const state = navStack[navStack.length - 1];
       updateTelegramBackButton();
-      renderBreadcrumbs();
+      renderTopBar();
       updateBottomNav(state.view);
 
       const app = document.getElementById('app');
@@ -767,30 +874,41 @@
         sliderHtml = `<div class="slider-wrap"><div class="slider-track">${slides}</div></div>`;
       }
 
+      const middleRow = DB.config.show_sharai ? `
+        <div class="home-row-2">
+          <button class="home-btn" onclick="pushView({ view: 'sharai', label: 'شرایع الاسلام' })">
+            <span>شرایع الاسلام</span>
+          </button>
+          <button class="home-btn" onclick="pushView({ view: 'teachers', label: 'پژوهش‌های اساتید', filter: '' })">
+            <span>پژوهش‌های اساتید</span>
+          </button>
+        </div>
+      ` : `
+        <button class="home-btn" onclick="pushView({ view: 'teachers', label: 'پژوهش‌های اساتید', filter: '' })">
+          <span>پژوهش‌های اساتید</span>
+        </button>
+      `;
+
       container.innerHTML = `
-        <div class="search-box">
-          ${ICONS.search}
-          <input type="text" placeholder="جستجو در کل آرشیو..." readonly onclick="navigateRoot('search')" />
+        <div class="home-top-row">
+          <div class="search-box">
+            ${ICONS.search}
+            <input type="text" placeholder="جستجو در کل آرشیو..." readonly onclick="navigateRoot('search')" />
+          </div>
+          <button class="theme-btn" id="homeThemeBtn" onclick="toggleTheme()" aria-label="تغییر حالت صفحه"></button>
         </div>
         ${sliderHtml}
         <div class="home-stack">
           <button class="home-btn primary" onclick="openProfileById('ahmed_alhasan')">
             <span>سید احمدالحسن (علیه السلام)</span>
           </button>
-          <div class="home-row-2">
-            <button class="home-btn" onclick="pushView({ view: 'sharai', label: 'شرایع الاسلام' })">
-              <span>شرایع الاسلام</span>
-            </button>
-            <button class="home-btn" onclick="pushView({ view: 'teachers', label: 'پژوهش‌های اساتید', filter: '' })">
-              <span>پژوهش‌های اساتید</span>
-            </button>
-          </div>
+          ${middleRow}
           <button class="home-btn" onclick="openProfileById('friday_sermons')">
             <span>خطبه‌های نماز جمعه</span>
-            <span class="sub">ممثلیة البصرة</span>
           </button>
         </div>
       `;
+      applyTheme();
     }
 
     // 2. Teachers List View
@@ -847,7 +965,7 @@
       renderCurrentView();
     }
 
-    // 3. Group View (e.g., Dawa Mahdawia)
+    // 3. Group View
     function openGroupById(id) {
       const group = DB.teachers.find(t => t.id === id);
       if (!group) return;
@@ -894,22 +1012,24 @@
     function renderSocialLinks(links) {
       if (!links) return '';
       const btns = [];
-      if (links.x) btns.push(`<a class="social-btn" href="javascript:void(0)" onclick="openExternal('${escapeHtml(links.x)}')">${ICONS.x}<span>X</span></a>`);
-      if (links.youtube) btns.push(`<a class="social-btn" href="javascript:void(0)" onclick="openExternal('${escapeHtml(links.youtube)}')">${ICONS.youtube}<span>YouTube</span></a>`);
-      if (links.facebook) btns.push(`<a class="social-btn" href="javascript:void(0)" onclick="openExternal('${escapeHtml(links.facebook)}')">${ICONS.facebook}<span>Facebook</span></a>`);
+      if (links.x) btns.push(`<a class="social-btn btn-x" href="javascript:void(0)" onclick="openExternal('${escapeHtml(links.x)}')">${ICONS.x}<span>X</span></a>`);
+      if (links.youtube) btns.push(`<a class="social-btn btn-yt" href="javascript:void(0)" onclick="openExternal('${escapeHtml(links.youtube)}')">${ICONS.youtube}<span>YouTube</span></a>`);
+      if (links.facebook) btns.push(`<a class="social-btn btn-fb" href="javascript:void(0)" onclick="openExternal('${escapeHtml(links.facebook)}')">${ICONS.facebook}<span>Facebook</span></a>`);
       return btns.length ? `<div class="social-row">${btns.join('')}</div>` : '';
     }
 
-    // 4. Profile View (Teacher / Main Entity)
+    // 4. Profile View
     function openProfileById(id) {
       const teacher = DB.teachers.find(t => t.id === id);
       if (!teacher) return;
-      pushView({ view: 'profile', teacherId: id, label: teacher.name, activeTab: null, postSort: 'newest' });
+      const cleanName = id === 'friday_sermons' ? 'خطبه‌های نماز جمعه' : teacher.name;
+      pushView({ view: 'profile', teacherId: id, label: cleanName, activeTab: null, postSort: 'newest' });
     }
 
     function renderProfileView(container, state) {
       const teacher = DB.teachers.find(t => t.id === state.teacherId);
       if (!teacher) return;
+      const displayName = teacher.id === 'friday_sermons' ? 'خطبه‌های نماز جمعه' : teacher.name;
       const assets = getTeacherAssets(teacher);
 
       const availableTabs = [];
@@ -959,7 +1079,7 @@
 
       container.innerHTML = `
         <div class="page-header">
-          <div class="page-title">${escapeHtml(teacher.name)}</div>
+          <div class="page-title">${escapeHtml(displayName)}</div>
           ${renderSocialLinks(teacher.links)}
         </div>
         ${bodyHtml}
@@ -976,7 +1096,7 @@
       renderCurrentView();
     }
 
-    // 5. Shara'i al-Islam View
+    // 5. Shara'i View (Hidden by default via config)
     function renderSharaiView(container) {
       const key = normalizeText('شرایع');
       const books = DB.books.filter(b => normalizeText(b.title).includes(key) || normalizeText(b.macro_topic).includes(key));
@@ -1010,18 +1130,18 @@
 
       const actions = [];
       if (v.text_file) {
-        actions.push(`<button class="action-btn primary" onclick="openReader('video', '${v.id}')">${ICONS.book}<span>مطالعه آنلاین</span></button>`);
+        actions.push(`<button class="action-btn btn-read" onclick="openReader('video', '${v.id}')">${ICONS.book}<span>مطالعه آنلاین</span></button>`);
       }
       if (downloadUrl) {
-        actions.push(`<button class="action-btn" onclick="openExternal('${escapeHtml(downloadUrl)}')">${ICONS.download}<span>دانلود PDF</span></button>`);
+        actions.push(`<button class="action-btn btn-pdf" onclick="openExternal('${escapeHtml(downloadUrl)}')">${ICONS.download}<span>دانلود PDF</span></button>`);
       }
       if (v.youtube_link) {
-        actions.push(`<button class="action-btn" onclick="openExternal('${escapeHtml(v.youtube_link)}')">${ICONS.video}<span>ویدیوی اصلی (YouTube)</span></button>`);
+        actions.push(`<button class="action-btn btn-yt" onclick="openExternal('${escapeHtml(v.youtube_link)}')">${ICONS.youtube}<span>ویدیوی اصلی</span></button>`);
       }
       if (v.facebook_link) {
-        actions.push(`<button class="action-btn" onclick="openExternal('${escapeHtml(v.facebook_link)}')">${ICONS.video}<span>ویدیوی اصلی (Facebook)</span></button>`);
+        actions.push(`<button class="action-btn btn-fb" onclick="openExternal('${escapeHtml(v.facebook_link)}')">${ICONS.facebook}<span>ویدیوی اصلی</span></button>`);
       }
-      actions.push(`<button class="action-btn share" onclick="shareItem('video', '${v.id}', '${escapeHtml(v.title)}')">${ICONS.share}<span>Share</span></button>`);
+      actions.push(`<button class="action-btn btn-share" onclick="shareItem('video', '${v.id}', '${escapeHtml(v.title)}')">${ICONS.share}<span>Share</span></button>`);
 
       return `
         <div class="content-card">
@@ -1041,12 +1161,12 @@
 
       const actions = [];
       if (b.text_file) {
-        actions.push(`<button class="action-btn primary" onclick="openReader('book', '${b.id}')">${ICONS.book}<span>مطالعه آنلاین</span></button>`);
+        actions.push(`<button class="action-btn btn-read" onclick="openReader('book', '${b.id}')">${ICONS.book}<span>مطالعه آنلاین</span></button>`);
       }
       if (downloadUrl) {
-        actions.push(`<button class="action-btn" onclick="openExternal('${escapeHtml(downloadUrl)}')">${ICONS.download}<span>دانلود PDF</span></button>`);
+        actions.push(`<button class="action-btn btn-pdf" onclick="openExternal('${escapeHtml(downloadUrl)}')">${ICONS.download}<span>دانلود PDF</span></button>`);
       }
-      actions.push(`<button class="action-btn share" onclick="shareItem('book', '${b.id}', '${escapeHtml(b.title)}')">${ICONS.share}<span>Share</span></button>`);
+      actions.push(`<button class="action-btn btn-share" onclick="shareItem('book', '${b.id}', '${escapeHtml(b.title)}')">${ICONS.share}<span>Share</span></button>`);
 
       return `
         <div class="content-card">
@@ -1066,7 +1186,7 @@
           ${p.date ? `<div class="post-date">${toPersianDigits(p.date)}</div>` : ''}
           <div class="post-preview">${escapeHtml(preview)}</div>
           <div class="post-footer">
-            <button class="action-btn primary" style="flex:0 1 auto; padding: 8px 16px;" onclick="openReader('post', '${p.id}')">${ICONS.book}<span>مطالعه آنلاین</span></button>
+            <button class="action-btn btn-read" style="flex:0 1 auto; padding: 8px 16px;" onclick="openReader('post', '${p.id}')">${ICONS.book}<span>مطالعه آنلاین</span></button>
           </div>
         </div>
       `;
@@ -1103,9 +1223,9 @@
       const dateStr = item.date ? `تاریخ: ${toPersianDigits(item.date)}` : '';
 
       const sourceBtns = [];
-      if (item.source_x) sourceBtns.push(`<a class="social-btn" href="javascript:void(0)" onclick="openExternal('${escapeHtml(item.source_x)}')">${ICONS.x}<span>منبع: X</span></a>`);
-      if (item.source_facebook) sourceBtns.push(`<a class="social-btn" href="javascript:void(0)" onclick="openExternal('${escapeHtml(item.source_facebook)}')">${ICONS.facebook}<span>منبع: Facebook</span></a>`);
-      if (item.youtube_link) sourceBtns.push(`<a class="social-btn" href="javascript:void(0)" onclick="openExternal('${escapeHtml(item.youtube_link)}')">${ICONS.youtube}<span>ویدیوی اصلی</span></a>`);
+      if (item.source_x) sourceBtns.push(`<a class="social-btn btn-x" href="javascript:void(0)" onclick="openExternal('${escapeHtml(item.source_x)}')">${ICONS.x}<span>منبع: X</span></a>`);
+      if (item.source_facebook) sourceBtns.push(`<a class="social-btn btn-fb" href="javascript:void(0)" onclick="openExternal('${escapeHtml(item.source_facebook)}')">${ICONS.facebook}<span>منبع: Facebook</span></a>`);
+      if (item.youtube_link) sourceBtns.push(`<a class="social-btn btn-yt" href="javascript:void(0)" onclick="openExternal('${escapeHtml(item.youtube_link)}')">${ICONS.youtube}<span>ویدیوی اصلی</span></a>`);
 
       container.innerHTML = `
         <div class="reader-wrap">
@@ -1114,7 +1234,7 @@
           <div id="readerBody" class="reader-body">در حال بارگذاری متن...</div>
           <div class="reader-footer">
             <div class="social-row" style="margin-top:0;">${sourceBtns.join('')}</div>
-            <button class="action-btn share" onclick="shareItem('${state.itemType}', '${state.itemId}', '${escapeHtml(title || 'مطالعه آنلاین')}')">${ICONS.share}<span>Share</span></button>
+            <button class="action-btn btn-share" onclick="shareItem('${state.itemType}', '${state.itemId}', '${escapeHtml(title || 'مطالعه آنلاین')}')">${ICONS.share}<span>Share</span></button>
           </div>
         </div>
       `;
@@ -1177,7 +1297,7 @@
       `;
     }
 
-    // 8. Global Search View (Includes hidden tags)
+    // 8. Global Search View
     function renderSearchView(container, state) {
       const q = normalizeText(state.query || '');
       let resultsHtml = '';
