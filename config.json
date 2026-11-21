@@ -3,6 +3,8 @@
   "app_short_name": "archive",
   "show_category_on_card": true,
   "show_teacher_avatar": false,
+  "show_sharai": false,
+  "post_files": [],
   "slider": {
     "enabled": false,
     "items": [
