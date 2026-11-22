@@ -2233,16 +2233,32 @@
         `).join('');
         currentReaderTextForCopy = segments.map(s => s.fa).join('\n\n');
 
-        if (hasArabic) {
-          const arBtn = document.getElementById('toggleArBtn');
-          if (arBtn) {
-            arBtn.style.display = 'inline-block';
-            arBtn.onclick = () => {
-              const active = bodyEl.classList.toggle('show-ar');
-              arBtn.classList.toggle('active', active);
-            };
-          }
+       if (hasArabic) {
+      const toggleArabic = () => {
+        const active = bodyEl.classList.toggle('show-ar');
+        document.querySelectorAll('#toggleArBtn, #standaloneArBtn').forEach(btn => {
+          btn.classList.toggle('active', active);
+        });
+      };
+
+      const audioArBtn = document.getElementById('toggleArBtn');
+      if (audioArBtn && item.audio_url) {
+        audioArBtn.style.display = 'inline-block';
+        audioArBtn.onclick = toggleArabic;
+      }
+
+      if (!item.audio_url) {
+        const readerWrap = document.querySelector('.reader-wrap');
+        const bodyContainer = document.getElementById('readerBody');
+        if (readerWrap && bodyContainer && !document.getElementById('standaloneArBtn')) {
+          const bar = document.createElement('div');
+          bar.style.cssText = 'display:flex; justify-content:flex-end; margin-bottom:10px;';
+          bar.innerHTML = '<button type="button" class="audio-mini-btn" id="standaloneArBtn">عربی</button>';
+          readerWrap.insertBefore(bar, bodyContainer);
+          document.getElementById('standaloneArBtn').onclick = toggleArabic;
         }
+      }
+    }
       } else {
         // 2) Try HTML (Word Web) then TXT candidates
         const candidates = getCandidateTextFiles(item);
