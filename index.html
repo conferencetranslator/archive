@@ -1902,9 +1902,11 @@
       if (hasReadableContent(v, 'video')) {
         actions.push(`<button class="action-btn btn-read" onclick="openReader('video', '${escapeJs(v.id)}', '${sibKey}')">${ICONS.book}<span>مطالعه آنلاین</span></button>`);
       }
-      if (downloadUrl) {
-        actions.push(`<button class="action-btn btn-pdf" onclick="openExternal('${escapeJs(downloadUrl)}')">${ICONS.download}<span>دانلود PDF</span></button>`);
-      }
+      if (v.pdf_url) {
+      actions.push(`<a class="action-btn btn-pdf" href="${escapeHtml(v.pdf_url)}" download>${ICONS.download}<span>دانلود PDF</span></a>`);
+    } else if (v.telegram_link) {
+      actions.push(`<button class="action-btn btn-pdf" onclick="openExternal('${escapeJs(v.telegram_link)}')">${ICONS.download}<span>دانلود PDF</span></button>`);
+    }
       if (v.youtube_link) {
         actions.push(`<button class="action-btn btn-yt" onclick="openExternal('${escapeJs(v.youtube_link)}')">${ICONS.youtube}<span>ویدیوی اصلی</span></button>`);
       }
