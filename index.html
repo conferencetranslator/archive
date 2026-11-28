@@ -1902,8 +1902,11 @@
       if (hasReadableContent(v, 'video')) {
         actions.push(`<button class="action-btn btn-read" onclick="openReader('video', '${escapeJs(v.id)}', '${sibKey}')">${ICONS.book}<span>مطالعه آنلاین</span></button>`);
       }
-      if (v.pdf_url) {
-      actions.push(`<a class="action-btn btn-pdf" href="${escapeHtml(v.pdf_url)}" download>${ICONS.download}<span>دانلود PDF</span></a>`);
+     const pdfFullUrl = v.pdf_url
+      ? (v.pdf_url.startsWith('http') ? v.pdf_url : `https://conferencetranslator.github.io/archive/${v.pdf_url.replace(/^\/+/, '')}`)
+      : '';
+    if (pdfFullUrl) {
+      actions.push(`<button class="action-btn btn-pdf" onclick="openExternal('${escapeJs(pdfFullUrl)}')">${ICONS.download}<span>دانلود PDF</span></button>`);
     } else if (v.telegram_link) {
       actions.push(`<button class="action-btn btn-pdf" onclick="openExternal('${escapeJs(v.telegram_link)}')">${ICONS.download}<span>دانلود PDF</span></button>`);
     }
